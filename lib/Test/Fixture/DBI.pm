@@ -227,15 +227,37 @@ __END__
 
 =head1 NAME
 
-Test::Fixture::DBI -
+Test::Fixture::DBI - load fixture data to database.
 
 =head1 SYNOPSIS
 
+  use DBI;
+  use File::Temp qw(tempfile);
+  use Test::More;
   use Test::Fixture::DBI;
+
+  my ( undef, $filename ) = tempfile;
+  my $dbh = DBI->connect( "dbi:SQLite:dbname=$filename", "", "" );
+
+  construct_database(
+    dbh => $dbh,
+    database => '/path/to/schema.yaml',
+  );
+
+  construct_fixture(
+    dbh => $dbh,
+    fixture => '/path/to/fixture.yaml',
+  );
 
 =head1 DESCRIPTION
 
-Test::Fixture::DBI is
+Test::Fixture::DBI is fixture test using DBI.
+
+=head1 FUNCTIONS
+
+=head2 load_database( %specs )
+
+=head2 load_fixture( %specs )
 
 =head1 AUTHOR
 

@@ -2,7 +2,11 @@ use inc::Module::Install;
 name 'Test-Fixture-DBI';
 all_from 'lib/Test/Fixture/DBI.pm';
 
-# requires '';
+requires 'Carp';
+requires 'Exporter';
+requires 'Kwalify';
+requires 'SQL::Abstract';
+requires 'SQL::Abstract::Plugin::InsertMulti';
 
 tests 't/*.t';
 author_tests 'xt';
