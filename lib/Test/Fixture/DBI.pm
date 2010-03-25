@@ -5,11 +5,15 @@ use warnings;
 
 our $VERSION = '0.01';
 
+use base qw(Exporter);
+
 use Carp;
 use Kwalify;
 use Params::Validate qw(:all);
 use SQL::Abstract;
 use SQL::Abstract::Plugin::InsertMulti;
+
+our @EXPORT = qw(construct_database construct_fixture);
 
 sub construct_database {
     my %args = validate_with(
@@ -21,7 +25,7 @@ sub construct_database {
                 optional => 0,
             },
             database => +{
-                type => SCALAR,
+                type => SCALAR | ARRAYREF,
                 optional => 0,
             },
             schemas => +{

@@ -1,0 +1,10 @@
+--- 
+- 
+  data: 'CREATE TABLE diary ( id INTEGER PRIMARY KEY NOT NULL, subject VARCHAR(32), text VARCHAR(1024) );'
+  schema: diary
+- 
+  data: 'CREATE TABLE comment ( id INTEGER PRIMARY KEY NOT NULL, diary_id INTEGER NOT NULL, text VARCHAR(128) );'
+  schema: comment
+-
+  data: 'CREATE TABLE user (id INTEGER PRIMARY KEY NOT NULL, name VARCHAR(32) )'
+  schema: user
