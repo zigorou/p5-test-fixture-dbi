@@ -28,7 +28,7 @@ sub construct_database {
                 type => SCALAR | ARRAYREF,
                 optional => 0,
             },
-            schemas => +{
+            schema => +{
                 type => ARRAYREF,
                 optional => 1,
                 default => [],
@@ -39,7 +39,7 @@ sub construct_database {
     my $database =
       _validate_database( _load_database( $args{database} ) );
 
-    return _setup_database( $args{dbh}, $database, $args{schemas} );
+    return _setup_database( $args{dbh}, $database, $args{schema} );
 }
 
 sub _validate_database {
@@ -82,17 +82,17 @@ sub _load_database {
 }
 
 sub _setup_database {
-    my ($dbh, $database, $schemas) = @_;
+    my ($dbh, $database, $schema) = @_;
 
-    my %schemas =
-        ( @$schemas > 0 ) ?
-            map { $_ => undef } @$schemas :
+    my %schema =
+        ( @$schema > 0 ) ?
+            map { $_ => undef } @$schema :
             map { $_->{schema} => undef } @$database;
 
     my @databases;
     
     for my $def ( @$database ) {
-        next if ( !exists $schemas{$def->{schema}} );
+        next if ( !exists $schema{$def->{schema}} );
         $dbh->do( $def->{data} ) or croak($dbh->errstr);
         push( @databases, $def );
     }
@@ -181,9 +181,9 @@ sub _delete_all {
     my ($dbh, $fixture) = @_;
 
     my %seen;
-    my @schemas = grep { !$seen{$_}++ } map { $_->{schema} } @$fixture;
+    my @schema = grep { !$seen{$_}++ } map { $_->{schema} } @$fixture;
 
-    for my $schema ( @schemas ) {
+    for my $schema ( @schema ) {
         $dbh->do( sprintf('DELETE FROM %s', $schema) ) or croak( $dbh->errstr );
     }
 }
@@ -192,12 +192,12 @@ sub _insert {
     my ($dbh, $fixture, $opts) = @_;
 
     my %seen;
-    my @schemas = grep { !$seen{$_}++ } map { $_->{schema} } @$fixture;
+    my @schema = grep { !$seen{$_}++ } map { $_->{schema} } @$fixture;
 
     my $sql = SQL::Abstract->new;
     my ($stmt, @bind);
     
-    for my $schema ( @schemas ) {
+    for my $schema ( @schema ) {
         my @records = map { $_->{data} } grep { $_->{schema} eq $schema } @$fixture;
         my @records_tmp;
 

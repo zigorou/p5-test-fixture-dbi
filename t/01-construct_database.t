@@ -49,7 +49,7 @@ q|SELECT name FROM sqlite_master WHERE type = ? UNION ALL SELECT name FROM sqlit
           }
     ];
 
-    is_deeply( $tables, [qw/comment diary user/], 'setup schemas' );
+    is_deeply( $tables, [qw/comment diary user/], 'setup schema' );
 
     $dbh->disconnect;
 
@@ -81,7 +81,7 @@ q|SELECT name FROM sqlite_master WHERE type = ? ORDER BY name|,
           }
     ];
 
-    is_deeply( $tables, [qw/comment diary user/], 'setup schemas' );
+    is_deeply( $tables, [qw/comment diary user/], 'setup schema' );
 
     $dbh->disconnect;
 
@@ -115,7 +115,7 @@ q|CREATE TABLE comment ( id INTEGER PRIMARY KEY NOT NULL, diary_id INTEGER NOT N
 q|CREATE TABLE user (id INTEGER PRIMARY KEY NOT NULL, name VARCHAR(32) )|,
                     },
                 ],
-                schemas => [qw/diary comment/]
+                schema => [qw/diary comment/]
             );
         },
         'construct_database is success'
@@ -130,7 +130,7 @@ q|SELECT name FROM sqlite_master WHERE type = ? UNION ALL SELECT name FROM sqlit
           }
     ];
 
-    is_deeply( $tables, [qw/comment diary/], 'setup schemas' );
+    is_deeply( $tables, [qw/comment diary/], 'setup schema' );
 
     $dbh->disconnect;
 
@@ -148,7 +148,7 @@ subtest 'setup specified tables from yaml' => sub {
             construct_database(
                 dbh      => $dbh,
                 database => 't/schema.yaml',
-                schemas  => [qw/diary comment/]
+                schema  => [qw/diary comment/]
             );
         },
         'construct_database is success'
@@ -163,7 +163,7 @@ q|SELECT name FROM sqlite_master WHERE type = ? UNION ALL SELECT name FROM sqlit
           }
     ];
 
-    is_deeply( $tables, [qw/comment diary/], 'setup schemas' );
+    is_deeply( $tables, [qw/comment diary/], 'setup schema' );
 
     $dbh->disconnect;
 
