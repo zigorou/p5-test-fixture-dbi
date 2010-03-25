@@ -75,8 +75,8 @@ subtest 'setup all tables from yaml' => sub {
     my $tables = [
         map { $_->[0] } @{
             $dbh->selectall_arrayref(
-q|SELECT name FROM sqlite_master WHERE type = ? UNION ALL SELECT name FROM sqlite_temp_master WHERE type = ? ORDER BY name|,
-                undef, 'table', 'table'
+q|SELECT name FROM sqlite_master WHERE type = ? ORDER BY name|,
+                undef, 'table'
             )
           }
     ];
