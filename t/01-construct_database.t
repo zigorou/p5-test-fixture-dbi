@@ -10,136 +10,165 @@ use Test::Fixture::DBI;
 
 subtest 'setup all tables' => sub {
     my ( undef, $filename ) = tempfile;
-    my $dbh = DBI->connect("dbi:SQLite:dbname=$filename", '', '', +{ AutoCommit => 0, RaiseError => 1 });
+    my $dbh =
+      DBI->connect( "dbi:SQLite:dbname=$filename", '', '',
+        +{ AutoCommit => 0, RaiseError => 1 } );
 
     lives_ok(
         sub {
             construct_database(
-                dbh => $dbh,
+                dbh      => $dbh,
                 database => [
                     +{
                         schema => 'diary',
-                        data => q|CREATE TABLE diary ( id INTEGER PRIMARY KEY NOT NULL, subject VARCHAR(32), text VARCHAR(1024) );|,
+                        data =>
+q|CREATE TABLE diary ( id INTEGER PRIMARY KEY NOT NULL, subject VARCHAR(32), text VARCHAR(1024) );|,
                     },
                     +{
                         schema => 'comment',
-                        data => q|CREATE TABLE comment ( id INTEGER PRIMARY KEY NOT NULL, diary_id INTEGER NOT NULL, text VARCHAR(128) );|,
+                        data =>
+q|CREATE TABLE comment ( id INTEGER PRIMARY KEY NOT NULL, diary_id INTEGER NOT NULL, text VARCHAR(128) );|,
                     },
                     +{
                         schema => 'user',
-                        data => q|CREATE TABLE user (id INTEGER PRIMARY KEY NOT NULL, name VARCHAR(32) )|,
+                        data =>
+q|CREATE TABLE user (id INTEGER PRIMARY KEY NOT NULL, name VARCHAR(32) )|,
                     },
                 ],
             );
-        }, 'construct_database is success');
+        },
+        'construct_database is success'
+    );
 
     my $tables = [
-        map { $_->[0] }
-        @{$dbh->selectall_arrayref(
-            q|SELECT name FROM sqlite_master WHERE type = ? UNION ALL SELECT name FROM sqlite_temp_master WHERE type = ? ORDER BY name|,
-            undef,
-            'table', 'table'
-        )}
+        map { $_->[0] } @{
+            $dbh->selectall_arrayref(
+q|SELECT name FROM sqlite_master WHERE type = ? UNION ALL SELECT name FROM sqlite_temp_master WHERE type = ? ORDER BY name|,
+                undef, 'table', 'table'
+            )
+          }
     ];
 
-    is_deeply( $tables, [ qw/comment diary user/ ], 'setup schemas' );
-    
+    is_deeply( $tables, [qw/comment diary user/], 'setup schemas' );
+
+    $dbh->disconnect;
+
     done_testing;
 };
 
 subtest 'setup all tables from yaml' => sub {
     my ( undef, $filename ) = tempfile;
-    my $dbh = DBI->connect("dbi:SQLite:dbname=$filename", '', '', +{ AutoCommit => 0, RaiseError => 1 });
+    my $dbh =
+      DBI->connect( "dbi:SQLite:dbname=$filename", '', '',
+        +{ AutoCommit => 0, RaiseError => 1 } );
 
     lives_ok(
         sub {
             construct_database(
-                dbh => $dbh,
+                dbh      => $dbh,
                 database => 't/schema.yaml',
             );
-        }, 'construct_database is success');
+        },
+        'construct_database is success'
+    );
 
     my $tables = [
-        map { $_->[0] }
-        @{$dbh->selectall_arrayref(
-            q|SELECT name FROM sqlite_master WHERE type = ? UNION ALL SELECT name FROM sqlite_temp_master WHERE type = ? ORDER BY name|,
-            undef,
-            'table', 'table'
-        )}
+        map { $_->[0] } @{
+            $dbh->selectall_arrayref(
+q|SELECT name FROM sqlite_master WHERE type = ? UNION ALL SELECT name FROM sqlite_temp_master WHERE type = ? ORDER BY name|,
+                undef, 'table', 'table'
+            )
+          }
     ];
 
-    is_deeply( $tables, [ qw/comment diary user/ ], 'setup schemas' );
-    
+    is_deeply( $tables, [qw/comment diary user/], 'setup schemas' );
+
+    $dbh->disconnect;
+
     done_testing;
 };
 
 subtest 'setup specified tables' => sub {
     my ( undef, $filename ) = tempfile;
-    my $dbh = DBI->connect("dbi:SQLite:dbname=$filename", '', '', +{ AutoCommit => 0, RaiseError => 1 });
+    my $dbh =
+      DBI->connect( "dbi:SQLite:dbname=$filename", '', '',
+        +{ AutoCommit => 0, RaiseError => 1 } );
 
     lives_ok(
         sub {
             construct_database(
-                dbh => $dbh,
+                dbh      => $dbh,
                 database => [
                     +{
                         schema => 'diary',
-                        data => q|CREATE TABLE diary ( id INTEGER PRIMARY KEY NOT NULL, subject VARCHAR(32), text VARCHAR(1024) );|,
+                        data =>
+q|CREATE TABLE diary ( id INTEGER PRIMARY KEY NOT NULL, subject VARCHAR(32), text VARCHAR(1024) );|,
                     },
                     +{
                         schema => 'comment',
-                        data => q|CREATE TABLE comment ( id INTEGER PRIMARY KEY NOT NULL, diary_id INTEGER NOT NULL, text VARCHAR(128) );|,
+                        data =>
+q|CREATE TABLE comment ( id INTEGER PRIMARY KEY NOT NULL, diary_id INTEGER NOT NULL, text VARCHAR(128) );|,
                     },
                     +{
                         schema => 'user',
-                        data => q|CREATE TABLE user (id INTEGER PRIMARY KEY NOT NULL, name VARCHAR(32) )|,
+                        data =>
+q|CREATE TABLE user (id INTEGER PRIMARY KEY NOT NULL, name VARCHAR(32) )|,
                     },
                 ],
                 schemas => [qw/diary comment/]
             );
-        }, 'construct_database is success');
+        },
+        'construct_database is success'
+    );
 
     my $tables = [
-        map { $_->[0] }
-        @{$dbh->selectall_arrayref(
-            q|SELECT name FROM sqlite_master WHERE type = ? UNION ALL SELECT name FROM sqlite_temp_master WHERE type = ? ORDER BY name|,
-            undef,
-            'table', 'table'
-        )}
+        map { $_->[0] } @{
+            $dbh->selectall_arrayref(
+q|SELECT name FROM sqlite_master WHERE type = ? UNION ALL SELECT name FROM sqlite_temp_master WHERE type = ? ORDER BY name|,
+                undef, 'table', 'table'
+            )
+          }
     ];
 
-    is_deeply( $tables, [ qw/comment diary/ ], 'setup schemas' );
-    
+    is_deeply( $tables, [qw/comment diary/], 'setup schemas' );
+
+    $dbh->disconnect;
+
     done_testing;
-    
 };
 
 subtest 'setup specified tables from yaml' => sub {
     my ( undef, $filename ) = tempfile;
-    my $dbh = DBI->connect("dbi:SQLite:dbname=$filename", '', '', +{ AutoCommit => 0, RaiseError => 1 });
+    my $dbh =
+      DBI->connect( "dbi:SQLite:dbname=$filename", '', '',
+        +{ AutoCommit => 0, RaiseError => 1 } );
 
     lives_ok(
         sub {
             construct_database(
-                dbh => $dbh,
+                dbh      => $dbh,
                 database => 't/schema.yaml',
-                schemas => [qw/diary comment/]
+                schemas  => [qw/diary comment/]
             );
-        }, 'construct_database is success');
+        },
+        'construct_database is success'
+    );
 
     my $tables = [
-        map { $_->[0] }
-        @{$dbh->selectall_arrayref(
-            q|SELECT name FROM sqlite_master WHERE type = ? UNION ALL SELECT name FROM sqlite_temp_master WHERE type = ? ORDER BY name|,
-            undef,
-            'table', 'table'
-        )}
+        map { $_->[0] } @{
+            $dbh->selectall_arrayref(
+q|SELECT name FROM sqlite_master WHERE type = ? UNION ALL SELECT name FROM sqlite_temp_master WHERE type = ? ORDER BY name|,
+                undef, 'table', 'table'
+            )
+          }
     ];
 
-    is_deeply( $tables, [ qw/comment diary/ ], 'setup schemas' );
-    
+    is_deeply( $tables, [qw/comment diary/], 'setup schemas' );
+
+    $dbh->disconnect;
+
     done_testing;
-    
+
 };
 
 done_testing;
