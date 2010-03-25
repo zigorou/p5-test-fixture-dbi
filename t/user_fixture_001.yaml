@@ -1,0 +1,19 @@
+---
+-
+  name: zigorou
+  schema: user
+  data:
+    id: 1
+    name: zigorou
+-
+  name: hidek
+  schema: user
+  data:
+    id: 2
+    name: hidek
+-
+  name: crazytaxi
+  schema: user
+  data:
+    id: 3
+    name: crazytaxi

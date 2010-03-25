@@ -1,0 +1,9 @@
+---
+-
+  name: comment1_1
+  schema: comment
+  data:
+    id: 1
+    diary_id: 1
+    writer_id: 2
+    text: bazbazbaz

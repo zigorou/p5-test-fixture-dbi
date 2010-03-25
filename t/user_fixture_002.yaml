@@ -1,0 +1,13 @@
+---
+-
+  name: myfinder
+  schema: user
+  data:
+    id: 1
+    name: myfinder
+-
+  name: bayashi
+  schema: user
+  data:
+    id: 2
+    name: bayashi

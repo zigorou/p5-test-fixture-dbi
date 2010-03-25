@@ -160,15 +160,20 @@ sub _load_fixture {
 
     if ( ref $stuff ) {
         if ( ref $stuff eq 'ARRAY' ) {
-            return $stuff;
+            if ( ref $stuff->[0] ) {
+                return $stuff;
+            }
+            else {
+                require YAML::Syck;
+                return [ map { @{YAML::Syck::LoadFile($_)} } @$stuff ];
+            }
         }
         else {
             croak "invalid fixture stuff. should be ARRAY: $stuff";
         }
     }
     else {
-        require YAML::Syck;
-        return [ map { @{YAML::Syck::LoadFile($_)} } @$stuff ];
+        croak "invalid fixture stuff. should be ARRAY: $stuff";
     }
 }
 

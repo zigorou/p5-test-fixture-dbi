@@ -1,0 +1,17 @@
+---
+-
+  name: diary1
+  schema: diary
+  data:
+    id: 1
+    writer_id: 1
+    subject: diary1
+    text: foofoofoo
+-
+  name: diary2
+  schema: diary
+  data:
+    id: 2
+    writer_id: 3
+    subject: diary2
+    text: barbarbar
