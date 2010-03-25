@@ -110,21 +110,21 @@ sub construct_fixture {
                 optional => 0,
             },
             fixture => +{
-                type => SCALAR || ARRAYREF,
+                type => SCALAR | ARRAYREF,
                 optional => 0,
             },
             opts => +{
                 type => HASHREF,
-                optional => 0,
-                defaults => +{
-                    bulk_insert => 1,
-                },
+                optional => 1,
             },
         },
     );
 
     $args{fixture} = [ $args{fixture} ] unless ( ref $args{fixture} );
-
+    $args{opts} ||= +{
+        bulk_insert => 1,
+    };
+    
     my $fixture =
       _validate_fixture( _load_fixture( $args{fixture} ) );
 
@@ -144,7 +144,7 @@ sub _validate_fixture {
                     mapping => +{
                         name   => +{ type => 'str', required => 1, },
                         schema => +{ type => 'str', required => 1, },
-                        data   => +{ type => 'str', required => 1, },
+                        data   => +{ type => 'any', required => 1, },
                     }
                 }
             ]
@@ -179,7 +179,7 @@ sub _delete_all {
     my @schemas = grep { !$seen{$_}++ } map { $_->{schema} } @$fixture;
 
     for my $schema ( @schemas ) {
-        $dbh->do( sprintf('TRUNCATE TABLE %s', $schema) ) or croak( $dbh->errstr );
+        $dbh->do( sprintf('DELETE FROM %s', $schema) ) or croak( $dbh->errstr );
     }
 }
 
@@ -193,9 +193,9 @@ sub _insert {
     my ($stmt, @bind);
     
     for my $schema ( @schemas ) {
-        my @records = grep { $_->{schema} eq $schema } @$fixture;
+        my @records = map { $_->{data} } grep { $_->{schema} eq $schema } @$fixture;
         my @records_tmp;
-        
+
         if ( $opts->{bulk_insert}) {
             while ( ( @records_tmp = splice(@records, 0, 1000) ) > 0 ) {
                 ($stmt, @bind) = $sql->insert_multi( $schema, \@records_tmp );
