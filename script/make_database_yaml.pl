@@ -66,12 +66,32 @@ B<make_database_yaml.pl> - write short description for make_database_yaml.pl
 =head1 SYNOPSIS
 
   Options:
+    --dsn|-d            database dsn
+    --user|-u           database user
+    --password|-p       database password
+    --output|-o         output file name (yaml format)
     --help|-h		brief help message
     --man		full documentaion
 
 =head1 OPTIONS
 
 =over 4
+
+=item B<--dsn|-d>
+
+database dsn.
+
+=item B<--user|-u>
+
+database user.
+
+=item B<--password|-p>
+
+database password.
+
+=item B<--output|-o>
+
+output file name.
 
 =item B<--help|-h>
 

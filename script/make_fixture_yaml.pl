@@ -75,12 +75,47 @@ B<make_fixture_yaml.pl> - write short description for make_fixture_yaml.pl
 =head1 SYNOPSIS
 
   Options:
+    --dsn|-d            database dsn
+    --user|-u           database user
+    --password|-p       database password
+    --table|-t          table name
+    --name|-n           named columns ( multiple choice )
+    --execute|-e        execute query
+    --output|-o         output file name (yaml format)
     --help|-h		brief help message
     --man		full documentaion
 
 =head1 OPTIONS
 
 =over 4
+
+=item B<--dsn|-d>
+
+database dsn.
+
+=item B<--user|-u>
+
+database user.
+
+=item B<--password|-p>
+
+database password.
+
+=item B<--table|-t>
+
+table name
+
+=item B<--name|-n>
+
+named columns ( multiple choice )
+
+=item B<--execute|-e>
+
+execute query
+
+=item B<--output|-o>
+
+output file name.
 
 =item B<--help|-h>
 
