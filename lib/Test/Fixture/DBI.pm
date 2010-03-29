@@ -142,7 +142,7 @@ sub _validate_fixture {
                 +{
                     type    => 'map',
                     mapping => +{
-                        name   => +{ type => 'str', required => 1, },
+                        name   => +{ type => 'scalar', required => 1, },
                         schema => +{ type => 'str', required => 1, },
                         data   => +{ type => 'any', required => 1, },
                     }
