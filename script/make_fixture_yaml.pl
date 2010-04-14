@@ -54,7 +54,7 @@ my $dbh = DBI->connect(
         RaiseError         => 1,
         ShowErrorStatement => 1,
         PrintError         => 0,
-        PrintWarn          => 0
+        # PrintWarn          => 0
     }
 );
 

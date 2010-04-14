@@ -22,7 +22,13 @@ sub make_database_yaml {
     }
 
     my $data = $generator->( $dbh );
-    YAML::Syck::DumpFile( $filename, $data );
+
+    if ( $filename ) {
+        YAML::Syck::DumpFile( $filename, $data );
+    }
+    else {
+        print YAML::Syck::Dump( $data );
+    }
 }
 
 sub make_fixture_yaml {
@@ -38,7 +44,12 @@ sub make_fixture_yaml {
         });
     }
 
-    YAML::Syck::DumpFile( $filename, \@data );
+    if ( $filename ) {
+        YAML::Syck::DumpFile( $filename, \@data );
+    }
+    else {
+        YAML::Syck::Dump( $filename );
+    }
 }
 
 sub _make_database_yaml_SQLite {
