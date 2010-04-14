@@ -33,9 +33,9 @@ unless ($dsn) {
     die('dsn is mandatory option');
 }
 
-unless ($output) {
-    die('output is mandatory option');
-}
+# unless ($output) {
+#     die('output is mandatory option');
+# }
 
 unless ($table) {
     die('table is mandatory option');
