@@ -48,7 +48,7 @@ sub make_fixture_yaml {
         YAML::Syck::DumpFile( $filename, \@data );
     }
     else {
-        YAML::Syck::Dump( $filename );
+        print YAML::Syck::Dump( \@data );
     }
 }
 
