@@ -9,6 +9,7 @@ use DBI;
 use Getopt::Long;
 use Pod::Usage;
 use Test::Fixture::DBI::Util;
+use YAML::Syck;
 
 our $VERSION = 0.01;
 
@@ -33,9 +34,9 @@ unless ($dsn) {
     die('dsn is mandatory option');
 }
 
-unless ($output) {
-    die('output is mandatory option');
-}
+#unless ($output) {
+#    die('output is mandatory option');
+#}
 
 my $dbh = DBI->connect(
     $dsn, $user,
@@ -49,7 +50,10 @@ my $dbh = DBI->connect(
     }
 );
 
-make_database_yaml( $dbh, $output );
+my $data = make_database_yaml( $dbh, $output );
+if ( $data ) {
+    print YAML::Syck::Dump($data);
+}
 
 $dbh->disconnect;
 

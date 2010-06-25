@@ -2,12 +2,12 @@ package Test::Fixture::DBI::Util;
 
 use strict;
 use warnings;
-
-use base qw(Exporter);
+use Exporter qw(import);
 
 use Carp;
 use DBI;
 use YAML::Syck;
+use UNIVERSAL::require;
 
 our $VERSION = '0.01';
 our @EXPORT = qw(make_database_yaml make_fixture_yaml);
@@ -15,19 +15,16 @@ our @EXPORT = qw(make_database_yaml make_fixture_yaml);
 sub make_database_yaml {
     my ($dbh, $filename) = @_;
     my $driver = $dbh->{Driver}{Name};
-    my $generator = __PACKAGE__->can('_make_database_yaml_' . $driver);
-
-    unless ( $generator ) {
+    my $driver_class = __PACKAGE__ . '::' . $driver;
+    unless ( eval { $driver_class->require; 1 } ) {
         croak( sprintf('Driver %s is not supported yet', $driver) );
     }
-
-    my $data = $generator->( $dbh );
-
+    my $data = $driver_class->make_database( $dbh );
     if ( $filename ) {
         YAML::Syck::DumpFile( $filename, $data );
     }
     else {
-        print YAML::Syck::Dump( $data );
+        return $data;
     }
 }
 
@@ -48,40 +45,8 @@ sub make_fixture_yaml {
         YAML::Syck::DumpFile( $filename, \@data );
     }
     else {
-        print YAML::Syck::Dump( \@data );
+        return \@data;
     }
-}
-
-sub _make_database_yaml_SQLite {
-    my $dbh = shift;
-
-    my $rows = $dbh->selectall_arrayref(
-        q|SELECT tbl_name AS schema, sql AS data FROM sqlite_master WHERE type = ? ORDER BY tbl_name|,
-        +{ Slice => +{} },
-        'table'
-    );
-
-    return $rows;
-}
-
-sub _make_database_yaml_mysql {
-    my $dbh = shift;
-
-    my @tables = map { $_->[0] } @{$dbh->selectall_arrayref(
-        q|SHOW TABLES|,
-    )};
-
-    my @data;
-    
-    for my $table ( @tables ) {
-        my ($schema, $data) = $dbh->selectrow_array( sprintf(q|SHOW CREATE TABLE %s|, $table) );
-        push( @data, +{
-            schema => $schema,
-            data   => $data,
-        } );
-    }
-
-    return \@data;
 }
 
 1;
