@@ -3,6 +3,9 @@
   data: "CREATE TABLE friend (\n  id INTEGER NOT NULL,\n  friend_id INTEGER NOT NULL,\n  status INTEGER NOT NULL DEFAULT 0,\n  created_on TEXT NOT NULL,\n  updated_on TEXT NOT NULL,\n  PRIMARY KEY (id, friend_id)\n)"
   schema: friend
 - 
+  data: "CREATE TABLE friend_counter (\n  counter INTEGER NOT NULL DEFAULT 0\n)"
+  schema: friend_counter
+- 
   data: "CREATE TABLE people (\n  id INTEGER PRIMARY KEY NOT NULL,\n  nickname TEXT NOT NULL,\n  status INTEGER NOT NULL DEFAULT 0,\n  created_on TEXT NOT NULL,\n  updated_on TEXT NOT NULL\n)"
   schema: people
 - 
@@ -16,6 +19,14 @@
   data: "CREATE TRIGGER on_after_insert_people AFTER INSERT ON people\nFOR EACH ROW BEGIN\n  UPDATE people_counter SET counter = counter + 1;\nEND"
   refer: people
   trigger: on_after_insert_people
+- 
+  data: "CREATE TRIGGER on_after_delete_friend AFTER DELETE ON friend\nFOR EACH ROW BEGIN\n  UPDATE friend_counter SET counter = counter - 1;\nEND"
+  refer: friend
+  trigger: on_after_delete_friend
+- 
+  data: "CREATE TRIGGER on_after_insert_friend AFTER INSERT ON friend\nFOR EACH ROW BEGIN\n  UPDATE friend_counter SET counter = counter + 1;\nEND"
+  refer: friend
+  trigger: on_after_insert_friend
 - 
   data: CREATE INDEX idx_people_on_id_and_created_on ON people (id, created_on)
   index: idx_people_on_id_and_created_on

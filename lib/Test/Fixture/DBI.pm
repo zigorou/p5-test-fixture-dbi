@@ -12,10 +12,10 @@ use Params::Validate qw(:all);
 use SQL::Abstract;
 use SQL::Abstract::Plugin::InsertMulti;
 
-our @EXPORT = qw(construct_database construct_fixture);
-our @EXPORT_OK = qw( construct_trigger );
+our @EXPORT      = qw(construct_database construct_fixture);
+our @EXPORT_OK   = qw( construct_trigger );
 our %EXPORT_TAGS = (
-    default => [ @EXPORT ],
+    default => [@EXPORT],
     all     => [ @EXPORT, @EXPORT_OK ]
 );
 
@@ -43,21 +43,22 @@ sub construct_database {
                 default  => [],
             },
             function => +{
-                type => ARRAYREF,
+                type     => ARRAYREF,
                 required => 0,
-                default => [],
+                default  => [],
             },
-#             index => +{
-#                 type => ARRAYREF,
-#                 required => 0,
-#                 default => [],
-#             },
+            index => +{
+                type     => ARRAYREF,
+                required => 0,
+                default  => [],
+            },
         },
     );
 
     my $database = _validate_database( _load_database( $args{database} ) );
 
-    return _setup_database( $args{dbh}, [ grep { !exists $_->{trigger} } @$database ], \%args );
+    return _setup_database( $args{dbh},
+        [ grep { !exists $_->{trigger} } @$database ], \%args );
 }
 
 sub _validate_database {
@@ -74,7 +75,7 @@ sub _validate_database {
                         procedure => +{ type => 'str', required => 0, },
                         function  => +{ type => 'str', required => 0, },
                         trigger   => +{ type => 'str', required => 0, },
-                        # index     => +{ type => 'str', required => 0, },
+                        index     => +{ type => 'str', required => 0, },
                         refer     => +{ type => 'str', required => 0, },
                         data      => +{ type => 'str', required => 1, },
                     },
@@ -110,13 +111,17 @@ sub _setup_database {
     my @databases;
 
     ### TODO: considering index for SQLite
-    for my $target ( qw/schema procedure function/ ) {
-        my %targets = @{$args->{$target}} > 0 ?
-            map { $_ => undef } @{$args->{$target}} :
-            map { $_->{$target} => undef } grep { exists $_->{$target} } @$database;
+    for my $target (qw/schema index procedure function/) {
+        my %targets =
+          @{ $args->{$target} } > 0
+          ? map { $_            => undef } @{ $args->{$target} }
+          : map { $_->{$target} => undef }
+          grep { exists $_->{$target} } @$database;
 
         for my $def (@$database) {
-            next unless ( exists $def->{$target} && exists $targets{ $def->{$target} } );
+            next
+              unless ( exists $def->{$target}
+                && exists $targets{ $def->{$target} } );
             $dbh->do( $def->{data} ) or croak( $dbh->errstr );
             push( @databases, $def );
         }
@@ -128,7 +133,7 @@ sub _setup_database {
 sub construct_trigger {
     my %args = validate_with(
         params => \@_,
-        spec => +{
+        spec   => +{
             dbh => +{
                 type     => OBJECT,
                 isa      => 'DBI::db',
@@ -147,18 +152,21 @@ sub construct_trigger {
     );
 
     my $trigger = _validate_database( _load_database( $args{database} ) );
-    return _setup_trigger( $args{dbh}, [ grep { exists $_->{trigger} && exists $_->{refer} } @$trigger ], \%args );
+    return _setup_trigger( $args{dbh},
+        [ grep { exists $_->{trigger} && exists $_->{refer} } @$trigger ],
+        \%args );
 }
 
 sub _setup_trigger {
     my ( $dbh, $trigger, $args ) = @_;
     my @triggers;
 
-    my %triggers = @{$args->{schema}} > 0 ?
-        ( map { $_ => undef } @{$args->{schema}} ) :
-        ( map { $_->{refer} => undef } @$trigger );
+    my %triggers =
+      @{ $args->{schema} } > 0
+      ? ( map { $_ => undef } @{ $args->{schema} } )
+      : ( map { $_->{refer} => undef } @$trigger );
 
-    for my $def ( @$trigger ) {
+    for my $def (@$trigger) {
         next if ( !exists $triggers{ $def->{refer} } );
         $dbh->do( $def->{data} ) or croak( $dbh->errstr );
         push( @triggers, $def );
