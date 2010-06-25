@@ -53,6 +53,27 @@ subtest 'default' => sub {
     done_testing;
 };
 
+subtest 'with schema' => sub {
+    my $dbh = $connector->dbh;
+    my $database;
+
+    lives_ok(
+        sub {
+            $database = construct_database(
+                dbh      => $dbh,
+                database => 't/sqlite/schema.yaml',
+                schema   => [qw/friend friend_counter/],
+            );
+        },
+        'construct_database() will be success',
+    );
+
+    test_database( $dbh, 'table', [qw/friend friend_counter/] );
+    test_database( $dbh, 'index', [] );
+
+    done_testing;
+};
+
 done_testing;
 
 # Local Variables:

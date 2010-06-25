@@ -109,9 +109,40 @@ sub _setup_database {
     my ( $dbh, $database, $args ) = @_;
 
     my @databases;
+    my $enable_schema_filter = @{ $args->{schema} } > 0 ? 1 : 0;
+
+    my %tables =
+      $enable_schema_filter
+      ? map { $_           => undef } @{ $args->{schema} }
+      : map { $_->{schema} => undef }
+      grep  { exists $_->{schema} } @$database;
+
+    for my $def (@$database) {
+        next
+          unless ( exists $def->{schema}
+            && exists $tables{ $def->{schema} } );
+        $dbh->do( $def->{data} ) or croak( $dbh->errstr );
+        push( @databases, $def );
+    }
+
+    my %indexes =
+      map { $_->{index} => undef }
+      grep {
+             exists $_->{index}
+          && exists $_->{refer}
+          && exists $tables{ $_->{refer} }
+      } @$database;
+
+    for my $def (@$database) {
+        next
+          unless ( exists $def->{index}
+            && exists $tables{ $def->{refer} } );
+        $dbh->do( $def->{data} ) or croak( $dbh->errstr );
+        push( @databases, $def );
+    }
 
     ### TODO: considering index for SQLite
-    for my $target (qw/schema index procedure function/) {
+    for my $target (qw/procedure function/) {
         my %targets =
           @{ $args->{$target} } > 0
           ? map { $_            => undef } @{ $args->{$target} }
