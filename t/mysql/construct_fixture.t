@@ -228,6 +228,7 @@ subtest 'multiple fixture' => sub {
                             'created_on' => '2010-06-28 13:30:30',
                             'status' => '0',
                             'friend_id' => '1',
+                            'id' => '1',
                             'updated_on' => '2010-06-28 13:35:00'
                         },
                         'schema' => 'friend'
@@ -238,6 +239,7 @@ subtest 'multiple fixture' => sub {
                             'created_on' => '2010-06-28 14:30:30',
                             'status' => '1',
                             'friend_id' => '2',
+                            'id' => '2',
                             'updated_on' => '2010-06-28 14:35:00'
                         },
                         'schema' => 'friend'
@@ -248,6 +250,7 @@ subtest 'multiple fixture' => sub {
                             'created_on' => '2010-06-28 15:30:30',
                             'status' => '2',
                             'friend_id' => '3',
+                            'id' => '3',
                             'updated_on' => '2010-06-28 15:35:00'
                         },
                         'schema' => 'friend'
@@ -273,13 +276,13 @@ subtest 'multiple fixture' => sub {
 
     is_deeply(
         $dbh->selectall_arrayref(
-            'SELECT friend_id, status FROM friend ORDER BY friend_id ASC',
+            'SELECT id, friend_id, status FROM friend ORDER BY friend_id ASC',
             +{ Slice => +{} },
         ),
         [
-            +{ friend_id => 1, status => 0, },
-            +{ friend_id => 2, status => 1, },
-            +{ friend_id => 3, status => 2, },
+            +{ id => 1, friend_id => 1, status => 0, },
+            +{ id => 2, friend_id => 2, status => 1, },
+            +{ id => 3, friend_id => 3, status => 2, },
         ],
         'fixture friend test'
     );
@@ -324,13 +327,13 @@ subtest 'multiple fixture from yaml' => sub {
 
     is_deeply(
         $dbh->selectall_arrayref(
-            'SELECT friend_id, status FROM friend ORDER BY friend_id ASC',
+            'SELECT id, friend_id, status FROM friend ORDER BY friend_id ASC',
             +{ Slice => +{} },
         ),
         [
-            +{ friend_id => 1, status => 0, },
-            +{ friend_id => 2, status => 1, },
-            +{ friend_id => 3, status => 2, },
+            +{ id => 1, friend_id => 1, status => 0, },
+            +{ id => 2, friend_id => 2, status => 1, },
+            +{ id => 3, friend_id => 3, status => 2, },
         ],
         'fixture friend test'
     );
