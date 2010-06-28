@@ -13,7 +13,7 @@ requires 'SQL::Abstract::Plugin::InsertMulti';
 requires 'UNIVERSAL::require';
 requires 'YAML::Syck';
 
-tests 't/*.t';
+tests_recursive 't';
 author_tests 'xt';
 
 install_script './script/make_database_yaml.pl';
