@@ -50,6 +50,8 @@ subtest 'default' => sub {
         ]
     );
 
+    $dbh->disconnect;
+    
     done_testing;
 };
 
@@ -71,6 +73,8 @@ subtest 'with schema' => sub {
     test_database( $dbh, 'table', [qw/friend friend_counter/] );
     test_database( $dbh, 'index', [] );
 
+    $dbh->disconnect;
+    
     done_testing;
 };
 

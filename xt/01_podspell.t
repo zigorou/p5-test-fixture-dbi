@@ -7,4 +7,6 @@ all_pod_files_spelling_ok('lib');
 __DATA__
 Toru Yamaguchi
 zigorou@cpan.org
+Yuji Shimada
+xaicron@cpan.org
 Test::Fixture::DBI

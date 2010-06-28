@@ -150,6 +150,8 @@ subtest 'default' => sub {
         'fixture data test (re-insert)'
     );
 
+    $dbh->disconnect;
+
     done_testing;
 };
 
@@ -208,6 +210,8 @@ subtest 'from yaml' => sub {
         'fixture data test (re-insert)'
     );
 
+    $dbh->disconnect;
+    
     done_testing;
 };
 
@@ -260,6 +264,8 @@ subtest 'multiple fixture' => sub {
         'fixture friend test'
     );
 
+    $dbh->disconnect;
+    
     done_testing;
 };
 
@@ -312,6 +318,8 @@ subtest 'multiple fixture from yaml' => sub {
         'fixture friend test'
     );
 
+    $dbh->disconnect;
+
     done_testing;
 };
 
@@ -335,6 +343,8 @@ subtest 'fail bulk_insret' => sub {
         'bulk_inset not support',
     );
 
+    $dbh->disconnect;
+    
     done_testing;
 };
 

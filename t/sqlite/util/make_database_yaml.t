@@ -80,6 +80,8 @@ subtest 'test indexes' => sub {
     done_testing;
 };
 
+$dbh->disconnect;
+
 done_testing;
 
 # Local Variables:
