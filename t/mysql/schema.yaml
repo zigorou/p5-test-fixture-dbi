@@ -12,30 +12,30 @@
   data: "CREATE TABLE `friend_counter` (\n  `counter` int(11) NOT NULL DEFAULT '0'\n) ENGINE=MyISAM DEFAULT CHARSET=utf8"
   schema: friend_counter
 - 
-  data: "CREATE DEFINER=`root`@`localhost` PROCEDURE `proc_get_people_counter`()\nBEGIN\n    SELECT counter FROM people_counter;\n  END"
+  data: "CREATE PROCEDURE `proc_get_people_counter`()\nBEGIN\n    SELECT counter FROM people_counter;\n  END"
   procedure: proc_get_people_counter
 - 
-  data: "CREATE DEFINER=`root`@`localhost` PROCEDURE `proc_get_friend_counter`()\nBEGIN\n    SELECT counter FROM friend_counter;\n  END"
+  data: "CREATE PROCEDURE `proc_get_friend_counter`()\nBEGIN\n    SELECT counter FROM friend_counter;\n  END"
   procedure: proc_get_friend_counter
 - 
-  data: "CREATE DEFINER=`root`@`localhost` FUNCTION `func_hello_world`() RETURNS varchar(32) CHARSET utf8\nRETURN 'Hello world'"
+  data: "CREATE FUNCTION `func_hello_world`() RETURNS varchar(32) CHARSET utf8\nRETURN 'Hello world'"
   function: func_hello_world
 - 
-  data: "CREATE DEFINER=`root`@`localhost` FUNCTION `func_hello_world2`() RETURNS varchar(32) CHARSET utf8\nRETURN 'Hello world'"
+  data: "CREATE FUNCTION `func_hello_world2`() RETURNS varchar(32) CHARSET utf8\nRETURN 'Hello world'"
   function: func_hello_world2
 - 
-  data: "CREATE DEFINER=`root`@`localhost` TRIGGER on_after_delete_people AFTER DELETE ON people\n  FOR EACH ROW BEGIN\n    UPDATE people_counter SET counter = counter - 1;\n  END"
+  data: "CREATE TRIGGER on_after_delete_people AFTER DELETE ON people\n  FOR EACH ROW BEGIN\n    UPDATE people_counter SET counter = counter - 1;\n  END"
   refer: people
   trigger: on_after_delete_people
 - 
-  data: "CREATE DEFINER=`root`@`localhost` TRIGGER on_after_insert_people AFTER INSERT ON people\n  FOR EACH ROW BEGIN\n    UPDATE people_counter SET counter = counter + 1;\n  END"
+  data: "CREATE TRIGGER on_after_insert_people AFTER INSERT ON people\n  FOR EACH ROW BEGIN\n    UPDATE people_counter SET counter = counter + 1;\n  END"
   refer: people
   trigger: on_after_insert_people
 - 
-  data: "CREATE DEFINER=`root`@`localhost` TRIGGER on_after_delete_friend AFTER DELETE ON friend\n  FOR EACH ROW BEGIN\n    UPDATE friend_counter SET counter = counter - 1;\n  END"
+  data: "CREATE TRIGGER on_after_delete_friend AFTER DELETE ON friend\n  FOR EACH ROW BEGIN\n    UPDATE friend_counter SET counter = counter - 1;\n  END"
   refer: friend
   trigger: on_after_delete_friend
 - 
-  data: "CREATE DEFINER=`root`@`localhost` TRIGGER on_after_insert_friend AFTER INSERT ON friend\n  FOR EACH ROW BEGIN\n    UPDATE friend_counter SET counter = counter + 1;\n  END"
+  data: "CREATE TRIGGER on_after_insert_friend AFTER INSERT ON friend\n  FOR EACH ROW BEGIN\n    UPDATE friend_counter SET counter = counter + 1;\n  END"
   refer: friend
   trigger: on_after_insert_friend
