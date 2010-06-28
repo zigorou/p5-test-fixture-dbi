@@ -43,7 +43,7 @@ sub _procedures {
         my $def = $dbh->selectrow_hashref( sprintf('SHOW CREATE PROCEDURE %s', $row->{Name}) );
         push( @data, +{
             procedure => $row->{Name},
-            data => $def->{'Create Procedure'},
+            data => $class->_remove_definer($def->{'Create Procedure'}),
         } );
     }
 
@@ -58,7 +58,7 @@ sub _functions {
         my $def = $dbh->selectrow_hashref( sprintf('SHOW CREATE FUNCTION %s', $row->{Name}) );
         push( @data, +{
             function => $row->{Name},
-            data => $def->{'Create Function'},
+            data => $class->_remove_definer($def->{'Create Function'}),
         } );
     }
 
@@ -75,11 +75,17 @@ sub _triggers {
         push( @data, +{
             trigger => $row->{Trigger},
             refer => $row->{Table},
-            data => $def->{'SQL Original Statement'},
+            data => $class->_remove_definer($def->{'SQL Original Statement'}),
         } );
     }
 
     return @data;
+}
+
+sub _remove_definer {
+    my ( $class, $def ) = @_;
+    $def =~ s/CREATE(\s*.*\s*)(PROCEDURE|FUNCTION|TRIGGER)/CREATE $2/i;
+    $def;
 }
 
 1;

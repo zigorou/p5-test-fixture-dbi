@@ -69,16 +69,16 @@ subtest 'test schemas' => sub {
 };
 
 subtest 'test procedures' => sub {
-    test_procedure( $database->[3], 'proc_get_people_counter', 'CREATE\s.*\sPROCEDURE `proc_get_people_counter`' );
+    test_procedure( $database->[3], 'proc_get_people_counter', 'CREATE PROCEDURE `proc_get_people_counter`' );
 };
 
 subtest 'test functions' => sub {
-    test_function( $database->[4], 'func_hello_world', 'CREATE\s.*\sFUNCTION `func_hello_world`' );
+    test_function( $database->[4], 'func_hello_world', 'CREATE FUNCTION `func_hello_world`' );
 };
 
 subtest 'test triggers' => sub {
-     test_trigger( $database->[5], 'on_after_delete_people', 'people', 'CREATE\s.*\sTRIGGER on_after_delete_people ' );
-     test_trigger( $database->[6], 'on_after_insert_people', 'people', 'CREATE\s.*\sTRIGGER on_after_insert_people ' );
+     test_trigger( $database->[5], 'on_after_delete_people', 'people', 'CREATE TRIGGER on_after_delete_people ' );
+     test_trigger( $database->[6], 'on_after_insert_people', 'people', 'CREATE TRIGGER on_after_insert_people ' );
      done_testing;
 };
 
