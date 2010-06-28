@@ -9,6 +9,7 @@ use DBI;
 use Getopt::Long;
 use Pod::Usage;
 use Test::Fixture::DBI::Util;
+use YAML::Syck;
 
 our $VERSION = 0.01;
 
@@ -58,7 +59,11 @@ my $dbh = DBI->connect(
     }
 );
 
-make_fixture_yaml( $dbh, $table, $name, $sql, $output );
+my $data = make_fixture_yaml( $dbh, $table, $name, $sql, $output );
+
+if ( $data ) {
+  print YAML::Syck::Dump($data);
+}
 
 $dbh->disconnect;
 
