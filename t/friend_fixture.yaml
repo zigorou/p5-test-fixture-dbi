@@ -1,5 +1,6 @@
 ---
 - data:
+    id: 1
     friend_id: 1
     status: 0
     created_on: 2010-06-28 13:30:30
@@ -7,6 +8,7 @@
   name: friend_1
   schema: friend
 - data:
+    id: 2
     friend_id: 2
     status: 1
     created_on: 2010-06-28 14:30:30
@@ -14,6 +16,7 @@
   name: friend_2
   schema: friend
 - data:
+    id: 3
     friend_id: 3
     status: 2
     created_on: 2010-06-28 15:30:30
