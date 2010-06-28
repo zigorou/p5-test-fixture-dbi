@@ -222,12 +222,13 @@ sub construct_fixture {
             opts => +{
                 type     => HASHREF,
                 required => 0,
+                default => +{ bulk_insert => 1, },
             },
         },
     );
 
     $args{fixture} = [ $args{fixture} ] unless ( ref $args{fixture} );
-    $args{opts} ||= +{ bulk_insert => 1, };
+    # $args{opts} ||= +{ bulk_insert => 1, };
 
     my $fixture = _validate_fixture( _load_fixture( $args{fixture} ) );
 
