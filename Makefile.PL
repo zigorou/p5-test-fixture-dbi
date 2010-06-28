@@ -2,12 +2,15 @@ use inc::Module::Install;
 name 'Test-Fixture-DBI';
 all_from 'lib/Test/Fixture/DBI.pm';
 
+requires 'parent';
 requires 'Carp';
 requires 'DBI';
 requires 'Exporter';
 requires 'File::Temp';
+requires 'Getopt::Long';
 requires 'Kwalify';
 requires 'Params::Validate';
+requires 'Pod::Usage';
 requires 'SQL::Abstract';
 requires 'SQL::Abstract::Plugin::InsertMulti';
 requires 'UNIVERSAL::require';
@@ -23,8 +26,10 @@ test_requires 'DBD::mysql';
 test_requires 'DBD::SQLite';
 test_requires 'SQL::SplitStatement';
 test_requires 'Test::Exception';
+test_requires 'Test::LoadAllModules';
 test_requires 'Test::More';
 test_requires 'Test::mysqld';
+test_requires 'Test::Requires';
 
 auto_set_repository;
 auto_include;

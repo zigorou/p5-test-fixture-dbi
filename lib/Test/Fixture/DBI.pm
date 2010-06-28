@@ -361,13 +361,17 @@ Test::Fixture::DBI is fixture test using DBI.
 
 =head1 FUNCTIONS
 
-=head2 load_database( %specs )
+=head2 construct_database( %specs )
 
-=head2 load_fixture( %specs )
+=head2 construct_fixture( %specs )
+
+=head2 construct_trigger( %specs )
 
 =head1 AUTHOR
 
 Toru Yamaguchi E<lt>zigorou@cpan.orgE<gt>
+
+Yuji Shimada E<lt>xaicron@cpan.orgE<gt>
 
 =head1 SEE ALSO
 
