@@ -80,8 +80,6 @@ subtest 'test indexes' => sub {
     done_testing;
 };
 
-make_database_yaml( $dbh, './t/sqlite/schema.yaml' );
-
 done_testing;
 
 # Local Variables:
