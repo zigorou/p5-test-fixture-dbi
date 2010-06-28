@@ -1,0 +1,25 @@
+---
+- data:
+    created_on: 2010-06-28 12:30:30
+    id: 1
+    nickname: zigorou
+    status: 0
+    updated_on: 2010-06-28 12:35:00
+  name: zigorou
+  schema: people
+- data:
+    created_on: 2010-06-28 12:30:30
+    id: 2
+    nickname: hidek
+    status: 1
+    updated_on: 2010-06-28 12:35:00
+  name: hidek
+  schema: people
+- data:
+    created_on: 2010-06-28 12:30:30
+    id: 3
+    nickname: xaicron
+    status: 2
+    updated_on: 2010-06-28 12:35:00
+  name: xaicron
+  schema: people
