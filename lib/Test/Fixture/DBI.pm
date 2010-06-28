@@ -15,8 +15,8 @@ use SQL::Abstract::Plugin::InsertMulti;
 our @EXPORT      = qw(construct_database construct_fixture);
 our @EXPORT_OK   = qw( construct_trigger );
 our %EXPORT_TAGS = (
-    default => [@EXPORT],
-    all     => [ @EXPORT, @EXPORT_OK ]
+    default => [ @EXPORT ],
+    all     => [ @EXPORT, @EXPORT_OK ],
 );
 
 sub construct_database {
