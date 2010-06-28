@@ -45,8 +45,10 @@ sub _procedures {
     my $rows =
       $dbh->selectall_arrayref( 'SHOW PROCEDURE STATUS', +{ Slice => +{} } );
     my @data;
-    for my $row ( sort { $a->{Name} cmp $b->{Name} }
-        grep { $_->{Db} eq $dbname } @$rows )
+    for my $row (
+        sort { $a->{Name} cmp $b->{Name} }
+        grep { $_->{Db} eq $dbname } @$rows
+      )
     {
         my $def = $dbh->selectrow_hashref(
             sprintf( 'SHOW CREATE PROCEDURE %s', $row->{Name} ) );
@@ -69,8 +71,10 @@ sub _functions {
     my $rows =
       $dbh->selectall_arrayref( 'SHOW FUNCTION STATUS', +{ Slice => +{} } );
     my @data;
-    for my $row ( sort { $a->{Name} cmp $b->{Name} }
-        grep { $_->{Db} eq $dbname } @$rows )
+    for my $row (
+        sort { $a->{Name} cmp $b->{Name} }
+        grep { $_->{Db} eq $dbname } @$rows
+      )
     {
         my $def = $dbh->selectrow_hashref(
             sprintf( 'SHOW CREATE FUNCTION %s', $row->{Name} ) );
@@ -116,8 +120,8 @@ sub _remove_definer {
 
 sub _dbname {
     my $dbh = shift;
-    my ( undef, undef, undef, $attrs, undef ) = DBI->parse_dsn( $dbh->{Name} );
-    ( exists $attrs->{dbname} ) ? $attrs->{dbname} : $attrs->{db};
+    my %dsn = map { split( '=', $_ ) } split( ';', $dbh->{Name} );
+    return exists $dsn{dbname} ? $dsn{dbname} : $dsn{db};
 }
 
 1;
