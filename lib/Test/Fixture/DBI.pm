@@ -15,7 +15,7 @@ use SQL::Abstract::Plugin::InsertMulti;
 our @EXPORT      = qw(construct_database construct_fixture);
 our @EXPORT_OK   = qw( construct_trigger );
 our %EXPORT_TAGS = (
-    default => [ @EXPORT ],
+    default => [@EXPORT],
     all     => [ @EXPORT, @EXPORT_OK ],
 );
 
@@ -222,12 +222,13 @@ sub construct_fixture {
             opts => +{
                 type     => HASHREF,
                 required => 0,
-                default => +{ bulk_insert => 1, },
+                default  => +{ bulk_insert => 1, },
             },
         },
     );
 
     $args{fixture} = [ $args{fixture} ] unless ( ref $args{fixture} );
+
     # $args{opts} ||= +{ bulk_insert => 1, };
 
     my $fixture = _validate_fixture( _load_fixture( $args{fixture} ) );
@@ -357,15 +358,103 @@ Test::Fixture::DBI - load fixture data to database.
 
 =head1 DESCRIPTION
 
-Test::Fixture::DBI is fixture test using DBI.
+Test::Fixture::DBI is fixture test library for DBI.
+
+=head1 SETUP
+
+Before using this module, you must create database definition and fixture data.
+The following is creating database definition using L<make_database_yaml.pl>.
+
+  $ make_database_yaml.pl -d "dbi:mysql:dbname=social;host=testdb" -u root -p password -o /path/to/schema.yaml
+
+Next step is create fixture,
+
+  $ make_fixture_yaml.pl -d "dbi:mysql:dbname=social;host=testdb" -u root -p password -t activity -n id \
+    -e "SELECT * FROM activity WHERE app_id = 12 ORDER BY created_on DESC LIMIT 10" -o /path/to/fixture.yaml
+
 
 =head1 FUNCTIONS
 
 =head2 construct_database( %specs )
 
+The following is %specs details
+
+=over
+
+=item dbh
+
+Required parameter. dbh is L<DBI>'s DBI::db object;
+
+=item database
+
+Required parameter. database is ARRAYREF or SCALAR. 
+specify database name.
+
+=item schema
+
+Optional parameter. schema is ARRAYREF. 
+if schema parameter is specified, then load particular schemas from database.
+
+=item procedure
+
+Optional parameter. procedure is ARRAYREF. 
+if procedure parameter is specified, then load particular procedures from database.
+
+=item function
+
+Optional parameter. function is ARRAYREF. 
+if function parameter is specified, then load particular functions from database.
+
+=item index
+
+Optional parameter. index is ARRAYREF. 
+if index parameter is specified, then load particular indexs from database.
+
+=back
+
 =head2 construct_fixture( %specs )
 
+The following is %specs details
+=over
+
+=item dbh
+
+Required parameter. dbh is L<DBI>'s DBI::db object;
+
+=item fixture
+
+Required parameter. fixture is SCALAR or ARRAYREF, Specify fixture files.
+
+=item opts
+
+Optional parameter. opts is HASHREF.
+opts has bulk_insert key. if the bulk_insert value is true, 
+then using bulk insert on loading fixture data.
+
+=back
+
 =head2 construct_trigger( %specs )
+
+The following is %specs details
+
+=over
+
+=item dbh
+
+Required parameter. dbh is L<DBI>'s DBI::db object;
+
+=item database
+
+Optional parameter. database is SCALAR.
+specify database name.
+
+=item schema
+
+Optional parameter. schema is ARRAYREF.
+if schema parameter is specified, 
+then create particular triggers related specified schemas on the database.
+
+=back
 
 =head1 AUTHOR
 
@@ -374,6 +463,14 @@ Toru Yamaguchi E<lt>zigorou@cpan.orgE<gt>
 Yuji Shimada E<lt>xaicron@cpan.orgE<gt>
 
 =head1 SEE ALSO
+
+=over
+
+=item L<Test::Fixture::DBIC::Schema>
+
+=item L<Test::Fixture::DBIxSkinny>
+
+=back
 
 =head1 LICENSE
 

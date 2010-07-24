@@ -130,7 +130,7 @@ __END__
 
 =head1 NAME
 
-Test::Fixture::DBI::Util::mysql - write short description for Test::Fixture::DBI::Util::mysql
+Test::Fixture::DBI::Util::mysql - retrieve database definition for mysql
 
 =head1 SYNOPSIS
 
@@ -138,7 +138,9 @@ Test::Fixture::DBI::Util::mysql - write short description for Test::Fixture::DBI
 
 =head1 DESCRIPTION
 
-=head2 METHODS
+=head1 METHODS
+
+=head2 make_database()
 
 =head1 AUTHOR
 

@@ -9,39 +9,46 @@ sub make_database {
     my ( $class, $dbh ) = @_;
 
     my $rows = $dbh->selectall_arrayref(
-        q|SELECT name, type, tbl_name, sql FROM sqlite_master WHERE sql IS NOT NULL ORDER BY type|,
+q|SELECT name, type, tbl_name, sql FROM sqlite_master WHERE sql IS NOT NULL ORDER BY type|,
         +{ Slice => +{} },
     );
 
     my @database;
 
     ### retrieve table and view
-    push(
-        @database,
+    push( @database,
         map { +{ schema => $_->{name}, data => $_->{sql}, } }
-        sort { $a->{type} cmp $b->{type} || $a->{name} cmp $b->{name} } 
-        grep { $_->{type} eq 'table' || $_->{type} eq 'view' }
-        @$rows
-    );
+        sort { $a->{type} cmp $b->{type} || $a->{name} cmp $b->{name} }
+        grep { $_->{type} eq 'table' || $_->{type} eq 'view' } @$rows );
 
     ### retrive trigger
     push(
         @database,
         sort { $a->{trigger} cmp $b->{trigger} }
-        map { +{ trigger => $_->{name}, refer => $_->{tbl_name}, data => $_->{sql}, } }
-        grep { $_->{type} eq 'trigger' }
-        @$rows
+          map {
+            +{
+                trigger => $_->{name},
+                refer   => $_->{tbl_name},
+                data    => $_->{sql},
+              }
+          }
+          grep { $_->{type} eq 'trigger' } @$rows
     );
 
     ### retrive index
     push(
         @database,
         sort { $a->{index} cmp $b->{index} }
-        map { +{ index => $_->{name}, refer => $_->{tbl_name}, data => $_->{sql}, } }
-        grep { $_->{type} eq 'index' }
-        @$rows
+          map {
+            +{
+                index => $_->{name},
+                refer => $_->{tbl_name},
+                data  => $_->{sql},
+              }
+          }
+          grep { $_->{type} eq 'index' } @$rows
     );
-    
+
     return \@database;
 }
 
@@ -51,15 +58,17 @@ __END__
 
 =head1 NAME
 
-Test::Fixture::DBI::Util::mysql - write short description for Test::Fixture::DBI::Util::mysql
+Test::Fixture::DBI::Util::mysql - retrieve database definition for SQLite
 
 =head1 SYNOPSIS
 
-  use Test::Fixture::DBI::Util::mysql;
+  use Test::Fixture::DBI::Util::SQLite;
 
 =head1 DESCRIPTION
 
-=head2 METHODS
+=head1 METHODS
+
+=head2 make_database
 
 =head1 AUTHOR
 

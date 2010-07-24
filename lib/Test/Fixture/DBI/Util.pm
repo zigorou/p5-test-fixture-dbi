@@ -10,17 +10,17 @@ use YAML::Syck;
 use UNIVERSAL::require;
 
 our $VERSION = '0.01';
-our @EXPORT = qw(make_database_yaml make_fixture_yaml);
+our @EXPORT  = qw(make_database_yaml make_fixture_yaml);
 
 sub make_database_yaml {
-    my ($dbh, $filename) = @_;
-    my $driver = $dbh->{Driver}{Name};
+    my ( $dbh, $filename ) = @_;
+    my $driver       = $dbh->{Driver}{Name};
     my $driver_class = __PACKAGE__ . '::' . $driver;
     unless ( eval { $driver_class->require; 1 } ) {
-        croak( sprintf('Driver %s is not supported yet', $driver) );
+        croak( sprintf( 'Driver %s is not supported yet', $driver ) );
     }
-    my $data = $driver_class->make_database( $dbh );
-    if ( $filename ) {
+    my $data = $driver_class->make_database($dbh);
+    if ($filename) {
         YAML::Syck::DumpFile( $filename, $data );
     }
     else {
@@ -29,19 +29,24 @@ sub make_database_yaml {
 }
 
 sub make_fixture_yaml {
-    my ($dbh, $schema, $name_column, $sql, $filename) = @_;
+    my ( $dbh, $schema, $name_column, $sql, $filename ) = @_;
     my $rows = $dbh->selectall_arrayref( $sql, +{ Slice => +{} } );
 
     my @data;
-    for my $row ( @$rows ) {
-        push(@data, +{
-            name => ref $name_column ? join('_', map { $row->{$_} } @$name_column ) : $row->{$name_column},
-            schema => $schema,
-            data => $row,
-        });
+    for my $row (@$rows) {
+        push(
+            @data,
+            +{
+                name => ref $name_column
+                ? join( '_', map { $row->{$_} } @$name_column )
+                : $row->{$name_column},
+                schema => $schema,
+                data   => $row,
+            }
+        );
     }
 
-    if ( $filename ) {
+    if ($filename) {
         YAML::Syck::DumpFile( $filename, \@data );
     }
     else {
@@ -63,11 +68,13 @@ Test::Fixuture::DBI::Util - Make schema and fixture from exists database.
 
 =head1 DESCRIPTION
 
+This module is used by L<make_database_yaml.pl> and L<make_fixture_yaml.pl>
+
 =head1 FUNCTIONS
 
-=head2 make_database_yaml()
+=head2 make_database_yaml($dbh, $filename)
 
-=head2 make_fixture_yaml()
+=head2 make_fixture_yaml($dbh, $schema, $name_column, $sql, $filename)
 
 =head1 AUTHOR
 

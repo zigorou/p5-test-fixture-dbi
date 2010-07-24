@@ -34,10 +34,6 @@ unless ($dsn) {
     die('dsn is mandatory option');
 }
 
-#unless ($output) {
-#    die('output is mandatory option');
-#}
-
 my $dbh = DBI->connect(
     $dsn, $user,
     $password,
@@ -46,12 +42,11 @@ my $dbh = DBI->connect(
         RaiseError         => 1,
         ShowErrorStatement => 1,
         PrintError         => 0,
-        PrintWarn          => 0
     }
 );
 
 my $data = make_database_yaml( $dbh, $output );
-if ( $data ) {
+if ($data) {
     print YAML::Syck::Dump($data);
 }
 
@@ -61,7 +56,7 @@ __END__
 
 =head1 NAME
 
-B<make_database_yaml.pl> - write short description for make_database_yaml.pl
+B<make_database_yaml.pl> - make database definition from existing db.
 
 =head1 VERSION
 

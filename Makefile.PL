@@ -33,4 +33,6 @@ test_requires 'Test::Requires';
 
 auto_set_repository;
 auto_include;
+
+# auto_install;
 WriteAll;

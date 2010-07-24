@@ -34,10 +34,6 @@ unless ($dsn) {
     die('dsn is mandatory option');
 }
 
-# unless ($output) {
-#     die('output is mandatory option');
-# }
-
 unless ($table) {
     die('table is mandatory option');
 }
@@ -55,14 +51,13 @@ my $dbh = DBI->connect(
         RaiseError         => 1,
         ShowErrorStatement => 1,
         PrintError         => 0,
-        # PrintWarn          => 0
     }
 );
 
 my $data = make_fixture_yaml( $dbh, $table, $name, $sql, $output );
 
-if ( $data ) {
-  print YAML::Syck::Dump($data);
+if ($data) {
+    print YAML::Syck::Dump($data);
 }
 
 $dbh->disconnect;
@@ -71,7 +66,7 @@ __END__
 
 =head1 NAME
 
-B<make_fixture_yaml.pl> - write short description for make_fixture_yaml.pl
+B<make_fixture_yaml.pl> - make fixture data from existing db.
 
 =head1 VERSION
 
