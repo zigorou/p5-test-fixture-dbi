@@ -8,7 +8,7 @@ use Test::Fixture::DBI::Connector qw(:all);
 use Test::Fixture::DBI::Connector::mysql;
 
 my $conn = 'Test::Fixture::DBI::Connector::mysql';
-my ($dbh, $mysqld) = $conn->dbh;
+my ( $dbh, $mysqld ) = $conn->dbh;
 $dbh->{ShowErrorStatement} = 1;
 
 $conn->setup_database( $dbh, <<'SQL', +{ keep_terminater => 0, } );
@@ -64,22 +64,29 @@ my $database = make_database_yaml($dbh);
 subtest 'test schemas' => sub {
     test_schema( $database->[0], 'friend', 'CREATE TABLE `friend` ' );
     test_schema( $database->[1], 'people', 'CREATE TABLE `people` ' );
-    test_schema( $database->[2], 'people_counter', 'CREATE TABLE `people_counter` ' );
+    test_schema( $database->[2], 'people_counter',
+        'CREATE TABLE `people_counter` ' );
     done_testing;
 };
 
 subtest 'test procedures' => sub {
-    test_procedure( $database->[3], 'proc_get_people_counter', 'CREATE PROCEDURE `proc_get_people_counter`' );
+    test_procedure( $database->[3], 'proc_get_people_counter',
+        'CREATE PROCEDURE `proc_get_people_counter`' );
+    done_testing;
 };
 
 subtest 'test functions' => sub {
-    test_function( $database->[4], 'func_hello_world', 'CREATE FUNCTION `func_hello_world`' );
+    test_function( $database->[4], 'func_hello_world',
+        'CREATE FUNCTION `func_hello_world`' );
+    done_testing;
 };
 
 subtest 'test triggers' => sub {
-     test_trigger( $database->[5], 'on_after_delete_people', 'people', 'CREATE TRIGGER on_after_delete_people ' );
-     test_trigger( $database->[6], 'on_after_insert_people', 'people', 'CREATE TRIGGER on_after_insert_people ' );
-     done_testing;
+    test_trigger( $database->[5], 'on_after_delete_people', 'people',
+        'CREATE TRIGGER on_after_delete_people ' );
+    test_trigger( $database->[6], 'on_after_insert_people', 'people',
+        'CREATE TRIGGER on_after_insert_people ' );
+    done_testing;
 };
 
 $dbh->disconnect;

@@ -13,11 +13,28 @@ our $VERSION = '0.01';
 
 sub dbh {
     my ( $class, $args ) = @_;
-    my $mysqld =
-      Test::mysqld->new( +{ my_cnf => +{ 'skip-networking' => '', } } );
+
+    my $mysqld_command;
+    if ( $^O eq 'linux' ) {
+        ### for mysql's rpm problem
+        push( @Test::mysqld::SEARCH_PATHS, '/usr', );
+        $mysqld_command = Test::mysqld::_find_program(qw/mysqld sbin/);
+    }
+
+    my $mysqld = Test::mysqld->new(
+        +{
+            my_cnf => +{ 'skip-networking' => '', },
+            ( -x $mysqld_command ) ? ( mysqld => $mysqld_command ) : ()
+        }
+    );
     local $SIG{INT} = sub { kill TERM => $mysqld->pid };
-    return ( DBI->connect( $mysqld->dsn( dbname => 'test' ),
-        'root', '', +{ AutoCommit => 0, RaiseError => 1 } ), $mysqld );
+    return (
+        DBI->connect(
+            $mysqld->dsn( dbname => 'test' ),
+            'root', '', +{ AutoCommit => 0, RaiseError => 1 }
+        ),
+        $mysqld
+    );
 }
 
 1;

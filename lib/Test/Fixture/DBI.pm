@@ -393,7 +393,7 @@ specify database name.
 =item schema
 
 Optional parameter. schema is ARRAYREF. 
-if schema parameter is specified, then load particular schemas from database.
+if schema parameter is specified, then load particular schema from database.
 
 =item procedure
 
@@ -408,13 +408,14 @@ if function parameter is specified, then load particular functions from database
 =item index
 
 Optional parameter. index is ARRAYREF. 
-if index parameter is specified, then load particular indexs from database.
+if index parameter is specified, then load particular indexes from database.
 
 =back
 
 =head2 construct_fixture( %specs )
 
 The following is %specs details
+
 =over
 
 =item dbh
@@ -452,7 +453,7 @@ specify database name.
 
 Optional parameter. schema is ARRAYREF.
 if schema parameter is specified, 
-then create particular triggers related specified schemas on the database.
+then create particular triggers related specified schema on the database.
 
 =back
 
