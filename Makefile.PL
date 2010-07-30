@@ -22,8 +22,6 @@ author_tests 'xt';
 install_script './script/make_database_yaml.pl';
 install_script './script/make_fixture_yaml.pl';
 
-test_requires 'DBD::mysql';
-test_requires 'DBD::SQLite';
 test_requires 'SQL::SplitStatement';
 test_requires 'Test::Exception';
 test_requires 'Test::LoadAllModules';
