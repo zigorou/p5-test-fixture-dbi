@@ -26,7 +26,6 @@ test_requires 'SQL::SplitStatement';
 test_requires 'Test::Exception';
 test_requires 'Test::LoadAllModules';
 test_requires 'Test::More';
-test_requires 'Test::mysqld';
 test_requires 'Test::Requires';
 
 auto_set_repository;
