@@ -3,7 +3,7 @@ package Test::Fixture::DBI;
 use strict;
 use warnings;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02_01';
 
 use Carp;
 use Exporter qw(import);

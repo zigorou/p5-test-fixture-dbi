@@ -1,7 +1,5 @@
 .gitignore
 Changes
-inc/DBD/mysql.pm
-inc/DBD/SQLite.pm
 inc/Module/Install.pm
 inc/Module/Install/AuthorTests.pm
 inc/Module/Install/Base.pm
@@ -18,7 +16,6 @@ inc/SQL/SplitStatement.pm
 inc/Test/Exception.pm
 inc/Test/LoadAllModules.pm
 inc/Test/More.pm
-inc/Test/mysqld.pm
 inc/Test/Requires.pm
 lib/Test/Fixture/DBI.pm
 lib/Test/Fixture/DBI/Util.pm
