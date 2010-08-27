@@ -120,7 +120,7 @@ sub _remove_definer {
 
 sub _dbname {
     my $dbh = shift;
-    my %dsn = map { split( '=', $_ ) } split( ';', $dbh->{Name} );
+    my %dsn = map { split( '=', $_, 2 ) } split( ';', $dbh->{Name} );
     return exists $dsn{dbname} ? $dsn{dbname} : $dsn{db};
 }
 
