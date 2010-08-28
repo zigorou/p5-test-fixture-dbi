@@ -1,5 +1,11 @@
 Revision history for Perl extension Test::Fixture::DBI
 
+0.03        Sat Aug 28 19:44:18 2010
+              - version++
+
+0.02        Sat Aug 28 19:36:46 2010
+              - fixed typo and undefined warnings
+
 0.02_01     Mon Aug 23 01:35:18 2010
               - remove test_requires of two module (DBD::SQLite, Test::mysqld) 
 
