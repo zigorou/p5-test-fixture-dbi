@@ -340,7 +340,7 @@ subtest 'fail bulk_insret' => sub {
                 fixture => $fixture->{people_001},
             );
         },
-        'bulk_inset not support',
+        'bulk_insert not support',
     );
 
     $dbh->disconnect;

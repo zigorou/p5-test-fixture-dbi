@@ -24,7 +24,7 @@ sub dbh {
     my $mysqld = Test::mysqld->new(
         +{
             my_cnf => +{ 'skip-networking' => '', },
-            ( -x $mysqld_command ) ? ( mysqld => $mysqld_command ) : ()
+            ( defined $mysqld_command && -x $mysqld_command ) ? ( mysqld => $mysqld_command ) : ()
         }
     );
     local $SIG{INT} = sub { kill TERM => $mysqld->pid };
