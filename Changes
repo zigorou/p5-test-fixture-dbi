@@ -1,5 +1,8 @@
 Revision history for Perl extension Test::Fixture::DBI
 
+0.04        Tue Oct 12 18:51:17 2010
+              - Do not fetch trigger definitions on less than mysql 5.1
+
 0.03        Sat Aug 28 19:44:18 2010
               - version++
 

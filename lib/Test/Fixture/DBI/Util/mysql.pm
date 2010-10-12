@@ -5,7 +5,7 @@ use warnings;
 
 use DBI;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 sub make_database {
     my ( $class, $dbh ) = @_;
@@ -93,6 +93,12 @@ sub _functions {
 sub _triggers {
     my ( $class, $dbh ) = @_;
 
+    my ( $is_enable_show_create_trigger ) = $dbh->selectrow_array( 'SELECT VERSION() >= 5.1' );
+
+    unless ( $is_enable_show_create_trigger ) {
+        return ();
+    }
+    
     my $rows = $dbh->selectall_arrayref( 'SHOW TRIGGERS', +{ Slice => +{} } );
     my @data;
     for my $row ( sort { $a->{Trigger} cmp $b->{Trigger} } @$rows ) {
