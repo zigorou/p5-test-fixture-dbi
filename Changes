@@ -1,5 +1,10 @@
 Revision history for Perl extension Test::Fixture::DBI
 
+0.05        Tue Oct 19 22:46:26 2010
+              - Do not execute 'SHOW CREATE TRIGGER' on less than MySQL 5.1 
+                - MySQL 5.0 is not support 'SHOW CREATE TRIGGER'
+              - Not dependency on Params::Validate and Kwalify.
+
 0.04        Tue Oct 12 18:51:17 2010
               - Do not fetch trigger definitions on less than mysql 5.1
 

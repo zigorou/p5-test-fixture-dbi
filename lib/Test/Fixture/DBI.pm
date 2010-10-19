@@ -3,12 +3,11 @@ package Test::Fixture::DBI;
 use strict;
 use warnings;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 use Carp;
 use Exporter qw(import);
-use Kwalify;
-use Params::Validate qw(:all);
+use Scalar::Util qw(blessed);
 use SQL::Abstract;
 use SQL::Abstract::Plugin::InsertMulti;
 
@@ -19,42 +18,105 @@ our %EXPORT_TAGS = (
     all     => [ @EXPORT, @EXPORT_OK ],
 );
 
+sub _SCALAR { 1 };
+sub _ARRAYREF { 1 << 1; };
+sub _HASHREF { 1 << 2; };
+sub _OBJECT { 1 << 3; };
+
+sub _validate_with {
+    my %def = @_;
+
+    my %params = @{$def{params}};
+    my %specs   = %{$def{spec}};
+
+    for my $field ( keys %specs ) {
+	my $spec = $specs{$field};
+	my $param = $params{$field};
+	
+	if ( exists $spec->{required} && $spec->{required} && !exists $params{$field} ) {
+	    croak sprintf( '%s field is required.', $field );
+	}
+
+	if ( exists $spec->{default} && !defined $param ) {
+	    $params{$field} = $spec->{default};
+	}
+	
+	next unless ( defined $param );
+	
+	if ( exists $spec->{type} ) {
+	    my $is_valid_type = 0;
+	    
+	    if ( ( $spec->{type} & _SCALAR ) == _SCALAR && !ref $param) {
+		$is_valid_type = 1;
+	    }
+	    if ( ( $spec->{type} & _ARRAYREF ) == _ARRAYREF && ref $param eq 'ARRAY' ) {
+		$is_valid_type = 1;
+	    }
+	    if ( ( $spec->{type} & _HASHREF ) == _HASHREF && ref $param eq 'HASH' ) {
+		$is_valid_type = 1;
+	    }
+	    if ( ( $spec->{type} & _OBJECT ) == _OBJECT && blessed($param) ) {
+		$is_valid_type = 1;
+	    }
+
+	    unless ( $is_valid_type ) {
+		croak sprintf( '%s field is not valid type', $field );
+	    }
+	}
+
+	if ( exists $spec->{isa} && !UNIVERSAL::isa( $param, $spec->{isa} ) ) {
+	    croak sprintf( '%s field is not a %s instance', $field, $spec->{isa} );
+	}
+
+    }
+
+    return %params;
+}
+
 sub construct_database {
-    my %args = validate_with(
+    my %args = _validate_with(
         params => \@_,
         spec   => +{
             dbh => +{
-                type     => OBJECT,
+                type     => _OBJECT,
                 isa      => 'DBI::db',
                 required => 1,
             },
             database => +{
-                type     => SCALAR | ARRAYREF,
+                type     => _SCALAR | _ARRAYREF,
                 required => 1,
             },
             schema => +{
-                type     => ARRAYREF,
+                type     => _ARRAYREF,
                 required => 0,
                 default  => [],
             },
             procedure => +{
-                type     => ARRAYREF,
+                type     => _ARRAYREF,
                 required => 0,
                 default  => [],
             },
             function => +{
-                type     => ARRAYREF,
+                type     => _ARRAYREF,
                 required => 0,
                 default  => [],
             },
             index => +{
-                type     => ARRAYREF,
+                type     => _ARRAYREF,
                 required => 0,
                 default  => [],
             },
         },
     );
 
+    unless ( exists $args{dbh} && UNIVERSAL::isa( $args{dbh}, 'DBI::db' ) ) {
+	croak 'dbh field is not exists or is a DBI::db';
+    }
+
+    unless ( exists $args{database} && ( !ref $args{database} || ref $args{database} eq 'ARRAY' ) ) {
+	croak 'database field is not exists or is a SCALAR or ARRAYREF';
+    }
+    
     my $database = _validate_database( _load_database( $args{database} ) );
 
     return _setup_database( $args{dbh},
@@ -64,26 +126,22 @@ sub construct_database {
 sub _validate_database {
     my $stuff = shift;
 
-    Kwalify::validate(
-        +{
-            type     => 'seq',
-            sequence => [
-                +{
-                    type    => 'map',
-                    mapping => +{
-                        schema    => +{ type => 'str', required => 0, },
-                        procedure => +{ type => 'str', required => 0, },
-                        function  => +{ type => 'str', required => 0, },
-                        trigger   => +{ type => 'str', required => 0, },
-                        index     => +{ type => 'str', required => 0, },
-                        refer     => +{ type => 'str', required => 0, },
-                        data      => +{ type => 'str', required => 1, },
-                    },
-                },
-            ]
-        },
-        $stuff,
-    );
+    for my $data ( @$stuff ) {
+	my @data = %$data;
+	
+	_validate_with(
+	    params => \@data,
+	    spec => +{
+		schema    => +{ type => _SCALAR, required => 0, },
+		procedure => +{ type => _SCALAR, required => 0, },
+		function  => +{ type => _SCALAR, required => 0, },
+		trigger   => +{ type => _SCALAR, required => 0, },
+		index     => +{ type => _SCALAR, required => 0, },
+		refer     => +{ type => _SCALAR, required => 0, },
+		data      => +{ type => _SCALAR, required => 1, },
+	    },
+	);
+    }
 
     return $stuff;
 }
@@ -162,20 +220,20 @@ sub _setup_database {
 }
 
 sub construct_trigger {
-    my %args = validate_with(
+    my %args = _validate_with(
         params => \@_,
         spec   => +{
             dbh => +{
-                type     => OBJECT,
+                type     => _OBJECT,
                 isa      => 'DBI::db',
                 required => 1,
             },
             database => +{
-                type     => SCALAR,
+                type     => _SCALAR,
                 required => 0,
             },
             schema => +{
-                type     => ARRAYREF,
+                type     => _ARRAYREF,
                 required => 0,
                 default  => [],
             },
@@ -207,20 +265,20 @@ sub _setup_trigger {
 }
 
 sub construct_fixture {
-    my %args = validate_with(
+    my %args = _validate_with(
         params => \@_,
         spec   => +{
             dbh => +{
-                type     => OBJECT,
+                type     => _OBJECT,
                 isa      => 'DBI::db',
                 required => 1,
             },
             fixture => +{
-                type     => SCALAR | ARRAYREF,
+                type     => _SCALAR | _ARRAYREF,
                 required => 1,
             },
             opts => +{
-                type     => HASHREF,
+                type     => _HASHREF,
                 required => 0,
                 default  => +{ bulk_insert => 1, },
             },
@@ -240,23 +298,18 @@ sub construct_fixture {
 sub _validate_fixture {
     my $stuff = shift;
 
-    Kwalify::validate(
-        +{
-            type     => 'seq',
-            sequence => [
-                +{
-                    type    => 'map',
-                    mapping => +{
-                        name   => +{ type => 'scalar', required => 1, },
-                        schema => +{ type => 'str',    required => 1, },
-                        data   => +{ type => 'any',    required => 1, },
-                    }
-                }
-            ]
-        },
-        $stuff,
-    );
-
+    for my $data ( @$stuff ) {
+	my @data = %$data;
+	_validate_with(
+	    params => \@data,
+	    spec => +{
+		name   => +{ type => _SCALAR, required => 1, },
+		schema => +{ type => _SCALAR,    required => 1, },
+		data   => +{ type => _SCALAR | _ARRAYREF | _HASHREF,    required => 1, },
+	    },
+	);
+    }
+    
     return $stuff;
 }
 
