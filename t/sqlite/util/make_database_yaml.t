@@ -9,7 +9,8 @@ use Test::Fixture::DBI::Connector::SQLite;
 
 my $conn = 'Test::Fixture::DBI::Connector::SQLite';
 my $dbh = $conn->dbh;
-$conn->setup_database( $dbh, <<'SQL' );
+my @statements = (
+    << 'SQL',
 CREATE TABLE people (
   id INTEGER PRIMARY KEY NOT NULL,
   nickname TEXT NOT NULL,
@@ -17,11 +18,13 @@ CREATE TABLE people (
   created_on TEXT NOT NULL,
   updated_on TEXT NOT NULL
 );
-
+SQL
+    << 'SQL',
 CREATE TABLE people_counter (
   counter INTEGER NOT NULL DEFAULT 0
 );
-
+SQL
+    << 'SQL',
 CREATE TABLE friend (
   id INTEGER NOT NULL,
   friend_id INTEGER NOT NULL,
@@ -30,34 +33,29 @@ CREATE TABLE friend (
   updated_on TEXT NOT NULL,
   PRIMARY KEY (id, friend_id)
 );
-
+SQL
+    << 'SQL',
 INSERT INTO people_counter( counter ) VALUES (0);
-
-/*
-CREATE PROCEDURE proc_get_people_counter()
-BEGIN
-  SELECT counter FROM people_counter;
-END;
-
-CREATE FUNCTION func_hello_world() RETURNS VARCHAR(32)
-RETURN 'Hello world';
-*/
-
+SQL
+    << 'SQL',
 CREATE TRIGGER on_after_insert_people AFTER INSERT ON people
 FOR EACH ROW BEGIN
   UPDATE people_counter SET counter = counter + 1;
 END;
-
+SQL
+    << 'SQL',
 CREATE TRIGGER on_after_delete_people AFTER DELETE ON people
 FOR EACH ROW BEGIN
   UPDATE people_counter SET counter = counter - 1;
 END;
-
-CREATE INDEX idx_people_on_nickname ON people (nickname);
-CREATE INDEX idx_people_on_id_and_created_on ON people (id, created_on);
-CREATE INDEX idx_people_on_id_and_updated_on ON people (id, updated_on);
 SQL
+    'CREATE INDEX idx_people_on_nickname ON people (nickname);',
+    'CREATE INDEX idx_people_on_id_and_created_on ON people (id, created_on);',
+    'CREATE INDEX idx_people_on_id_and_updated_on ON people (id, updated_on);',
+);
 
+
+$conn->setup_database( $dbh, \@statements );
 my $database = make_database_yaml( $dbh );
 
 subtest 'test schemas' => sub {

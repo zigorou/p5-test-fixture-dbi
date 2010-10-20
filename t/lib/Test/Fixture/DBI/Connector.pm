@@ -13,18 +13,9 @@ our @EXPORT_OK = qw(test_schema test_procedure test_function test_trigger test_i
 our %EXPORT_TAGS = ( all => [ @EXPORT_OK ] );
 
 sub setup_database {
-    my ( $class, $dbh, $statements, $opts ) = @_;
-    $opts ||= +{};
+    my ( $class, $dbh, $statements ) = @_;
     
-    my $ss = SQL::SplitStatement->new(+{
-        keep_terminator => 1,
-        keep_extra_spaces => 1,
-        keep_comments => 1,
-        keep_empty_statements => 0,
-        %$opts,
-    });
-
-    for my $stmt ( $ss->split($statements) ) {
+    for my $stmt ( @$statements ) {
         $dbh->do( $stmt ) or croak($dbh->errstr);
     }
 }

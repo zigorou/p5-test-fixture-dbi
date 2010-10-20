@@ -1,5 +1,10 @@
 Revision history for Perl extension Test::Fixture::DBI
 
+0.06        Wed Oct 20 15:04:07 2010
+              - None library code changes (changes only in t/lib)
+              - Not dependency on SQL::SplitStatements
+                - S::SS depends on Moose;(
+
 0.05        Tue Oct 19 22:46:26 2010
               - Do not execute 'SHOW CREATE TRIGGER' on less than MySQL 5.1 
                 - MySQL 5.0 is not support 'SHOW CREATE TRIGGER'
