@@ -5,7 +5,6 @@ use warnings;
 use lib 't/lib';
 use Carp;
 use Exporter qw(import);
-use SQL::SplitStatement;
 use Test::More;
 
 our $VERSION = '0.01';
