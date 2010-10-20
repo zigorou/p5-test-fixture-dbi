@@ -12,7 +12,6 @@ inc/Module/Install/Repository.pm
 inc/Module/Install/Scripts.pm
 inc/Module/Install/Win32.pm
 inc/Module/Install/WriteAll.pm
-inc/SQL/SplitStatement.pm
 inc/Test/Exception.pm
 inc/Test/LoadAllModules.pm
 inc/Test/More.pm
