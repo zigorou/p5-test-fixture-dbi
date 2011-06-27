@@ -62,6 +62,24 @@ sub test_functions {
     );
 }
 
+sub test_events {
+    my ( $dbh, $expected_events ) = @_;
+    $expected_events = [ sort { $a cmp $b } @$expected_events ];
+    my $rows = $dbh->selectall_arrayref( 'SHOW EVENTS', +{ Slice => +{ Name => undef, }, } );
+
+    my $got_events = [
+        sort { $a cmp $b }
+        map  { $_->{Name} } @$rows
+    ];
+
+use Data::Dumper;
+warn Dumper $got_events;
+
+    is_deeply( $got_events, $expected_events,
+        sprintf( 'exists events (%s)', join( ', ', @$expected_events ) )
+    );
+}
+
 my $connector = 'Test::Fixture::DBI::Connector::mysql';
 my ( $dbh, $mysqld ) = $connector->dbh;
 
@@ -88,7 +106,7 @@ subtest 'default' => sub {
     done_testing;
 };
 
-subtest 'using schama, function, procedure option' => sub {
+subtest 'using schama, function, procedure, event option' => sub {
     setup_test($dbh);
 
     my $database;
@@ -101,6 +119,7 @@ subtest 'using schama, function, procedure option' => sub {
                 schema    => [qw/people/],
                 procedure => [qw/proc_get_people_counter/],
                 function  => [qw/func_hello_world2/],
+                event     => [qw/event_hello/],
             );
         },
         'construct_database() will be success',
@@ -109,6 +128,7 @@ subtest 'using schama, function, procedure option' => sub {
     test_tables( $dbh,     [qw/people/] );
     test_procedures( $dbh, [qw/proc_get_people_counter/] );
     test_functions( $dbh,  [qw/func_hello_world2/] );
+    test_events( $dbh,     [qw/event_hello/] );
 
     done_testing;
 };
