@@ -15,6 +15,7 @@ sub make_database {
     push( @database, $class->_procedures($dbh) );
     push( @database, $class->_functions($dbh) );
     push( @database, $class->_triggers($dbh) );
+    push( @database, $class->_events($dbh) );
 
     return \@database;
 }
@@ -111,6 +112,33 @@ sub _triggers {
                 refer   => $row->{Table},
                 data =>
                   $class->_remove_definer( $def->{'SQL Original Statement'} ),
+            }
+        );
+    }
+
+    return @data;
+}
+
+sub _events {
+    my ( $class, $dbh ) = @_;
+
+    my ( $is_enable_show_create_events ) = $dbh->selectrow_array( 'SELECT VERSION() >= 5.1' );
+
+    unless ( $is_enable_show_create_events ) {
+        return ();
+    }
+    
+    my $rows = $dbh->selectall_arrayref( 'SHOW EVENTS', +{ Slice => +{} } );
+    my @data;
+    for my $row ( sort { $a->{Name} cmp $b->{Name} } @$rows ) {
+        my $def = $dbh->selectrow_hashref( sprintf( 'SHOW CREATE EVENT %s', $row->{Name} ) );
+        push(
+            @data,
+            +{
+                name           => $row->{Name},
+                interval_val   => $row->{'Interval value'},
+                interval_field => $row->{'Interval field'},
+                data           => $def->{'Create Event'},
             }
         );
     }

@@ -39,3 +39,6 @@
   data: "CREATE TRIGGER on_after_insert_friend AFTER INSERT ON friend\n  FOR EACH ROW BEGIN\n    UPDATE friend_counter SET counter = counter + 1;\n  END"
   refer: friend
   trigger: on_after_insert_friend
+-
+  data: "CREATE EVENT event_hello ON SCHEDULE EVERY 3 SECOND\n  DO\n  SELECT UNIX_TIMESTAMP()"
+  event: event_hello
