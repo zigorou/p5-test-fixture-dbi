@@ -101,6 +101,11 @@ sub construct_database {
                 required => 0,
                 default  => [],
             },
+            event => +{
+                type     => _ARRAYREF,
+                required => 0,
+                default  => [],
+            },
             index => +{
                 type     => _ARRAYREF,
                 required => 0,
@@ -136,6 +141,7 @@ sub _validate_database {
 		procedure => +{ type => _SCALAR, required => 0, },
 		function  => +{ type => _SCALAR, required => 0, },
 		trigger   => +{ type => _SCALAR, required => 0, },
+		event     => +{ type => _SCALAR, required => 0, },
 		index     => +{ type => _SCALAR, required => 0, },
 		refer     => +{ type => _SCALAR, required => 0, },
 		data      => +{ type => _SCALAR, required => 1, },
@@ -200,7 +206,7 @@ sub _setup_database {
     }
 
     ### TODO: considering index for SQLite
-    for my $target (qw/procedure function/) {
+    for my $target (qw/procedure function event/) {
         my %targets =
           @{ $args->{$target} } > 0
           ? map { $_            => undef } @{ $args->{$target} }
