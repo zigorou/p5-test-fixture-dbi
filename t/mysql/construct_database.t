@@ -72,9 +72,6 @@ sub test_events {
         map  { $_->{Name} } @$rows
     ];
 
-use Data::Dumper;
-warn Dumper $got_events;
-
     is_deeply( $got_events, $expected_events,
         sprintf( 'exists events (%s)', join( ', ', @$expected_events ) )
     );
