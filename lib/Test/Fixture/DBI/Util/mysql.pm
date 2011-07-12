@@ -99,7 +99,7 @@ sub _triggers {
     unless ( $is_enable_show_create_trigger ) {
         return ();
     }
-    
+
     my $rows = $dbh->selectall_arrayref( 'SHOW TRIGGERS', +{ Slice => +{} } );
     my @data;
     for my $row ( sort { $a->{Trigger} cmp $b->{Trigger} } @$rows ) {
@@ -127,7 +127,7 @@ sub _events {
     unless ( $is_enable_show_create_events ) {
         return ();
     }
-    
+
     my $rows = $dbh->selectall_arrayref( 'SHOW EVENTS', +{ Slice => +{} } );
     my @data;
     for my $row ( sort { $a->{Name} cmp $b->{Name} } @$rows ) {

@@ -3,7 +3,7 @@ package Test::Fixture::DBI;
 use strict;
 use warnings;
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 use Carp;
 use Exporter qw(import);
@@ -30,43 +30,43 @@ sub _validate_with {
     my %specs   = %{$def{spec}};
 
     for my $field ( keys %specs ) {
-	my $spec = $specs{$field};
-	my $param = $params{$field};
-	
-	if ( exists $spec->{required} && $spec->{required} && !exists $params{$field} ) {
-	    croak sprintf( '%s field is required.', $field );
-	}
+        my $spec = $specs{$field};
+        my $param = $params{$field};
 
-	if ( exists $spec->{default} && !defined $param ) {
-	    $params{$field} = $spec->{default};
-	}
-	
-	next unless ( defined $param );
-	
-	if ( exists $spec->{type} ) {
-	    my $is_valid_type = 0;
-	    
-	    if ( ( $spec->{type} & _SCALAR ) == _SCALAR && !ref $param) {
-		$is_valid_type = 1;
-	    }
-	    if ( ( $spec->{type} & _ARRAYREF ) == _ARRAYREF && ref $param eq 'ARRAY' ) {
-		$is_valid_type = 1;
-	    }
-	    if ( ( $spec->{type} & _HASHREF ) == _HASHREF && ref $param eq 'HASH' ) {
-		$is_valid_type = 1;
-	    }
-	    if ( ( $spec->{type} & _OBJECT ) == _OBJECT && blessed($param) ) {
-		$is_valid_type = 1;
-	    }
+        if ( exists $spec->{required} && $spec->{required} && !exists $params{$field} ) {
+            croak sprintf( '%s field is required.', $field );
+        }
 
-	    unless ( $is_valid_type ) {
-		croak sprintf( '%s field is not valid type', $field );
-	    }
-	}
+        if ( exists $spec->{default} && !defined $param ) {
+            $params{$field} = $spec->{default};
+        }
 
-	if ( exists $spec->{isa} && !UNIVERSAL::isa( $param, $spec->{isa} ) ) {
-	    croak sprintf( '%s field is not a %s instance', $field, $spec->{isa} );
-	}
+        next unless ( defined $param );
+
+        if ( exists $spec->{type} ) {
+            my $is_valid_type = 0;
+
+            if ( ( $spec->{type} & _SCALAR ) == _SCALAR && !ref $param) {
+                $is_valid_type = 1;
+            }
+            if ( ( $spec->{type} & _ARRAYREF ) == _ARRAYREF && ref $param eq 'ARRAY' ) {
+                $is_valid_type = 1;
+            }
+            if ( ( $spec->{type} & _HASHREF ) == _HASHREF && ref $param eq 'HASH' ) {
+                $is_valid_type = 1;
+            }
+            if ( ( $spec->{type} & _OBJECT ) == _OBJECT && blessed($param) ) {
+                $is_valid_type = 1;
+            }
+
+            unless ( $is_valid_type ) {
+                croak sprintf( '%s field is not valid type', $field );
+            }
+        }
+
+        if ( exists $spec->{isa} && !UNIVERSAL::isa( $param, $spec->{isa} ) ) {
+            croak sprintf( '%s field is not a %s instance', $field, $spec->{isa} );
+        }
 
     }
 
@@ -115,38 +115,38 @@ sub construct_database {
     );
 
     unless ( exists $args{dbh} && UNIVERSAL::isa( $args{dbh}, 'DBI::db' ) ) {
-	croak 'dbh field is not exists or is a DBI::db';
+        croak 'dbh field is not exists or is a DBI::db';
     }
 
     unless ( exists $args{database} && ( !ref $args{database} || ref $args{database} eq 'ARRAY' ) ) {
-	croak 'database field is not exists or is a SCALAR or ARRAYREF';
+        croak 'database field is not exists or is a SCALAR or ARRAYREF';
     }
-    
+
     my $database = _validate_database( _load_database( $args{database} ) );
 
     return _setup_database( $args{dbh},
-        [ grep { !exists $_->{trigger} } @$database ], \%args );
+                            [ grep { !exists $_->{trigger} } @$database ], \%args );
 }
 
 sub _validate_database {
     my $stuff = shift;
 
     for my $data ( @$stuff ) {
-	my @data = %$data;
-	
-	_validate_with(
-	    params => \@data,
-	    spec => +{
-		schema    => +{ type => _SCALAR, required => 0, },
-		procedure => +{ type => _SCALAR, required => 0, },
-		function  => +{ type => _SCALAR, required => 0, },
-		trigger   => +{ type => _SCALAR, required => 0, },
-		event     => +{ type => _SCALAR, required => 0, },
-		index     => +{ type => _SCALAR, required => 0, },
-		refer     => +{ type => _SCALAR, required => 0, },
-		data      => +{ type => _SCALAR, required => 1, },
-	    },
-	);
+        my @data = %$data;
+
+        _validate_with(
+            params => \@data,
+            spec => +{
+                schema    => +{ type => _SCALAR, required => 0, },
+                procedure => +{ type => _SCALAR, required => 0, },
+                function  => +{ type => _SCALAR, required => 0, },
+                trigger   => +{ type => _SCALAR, required => 0, },
+                event     => +{ type => _SCALAR, required => 0, },
+                index     => +{ type => _SCALAR, required => 0, },
+                refer     => +{ type => _SCALAR, required => 0, },
+                data      => +{ type => _SCALAR, required => 1, },
+            },
+        );
     }
 
     return $stuff;
@@ -158,12 +158,10 @@ sub _load_database {
     if ( ref $stuff ) {
         if ( ref $stuff eq 'ARRAY' ) {
             return $stuff;
-        }
-        else {
+        } else {
             croak "invalid fixture stuff. should be ARRAY: $stuff";
         }
-    }
-    else {
+    } else {
         require YAML::Syck;
         return YAML::Syck::LoadFile($stuff);
     }
@@ -176,31 +174,31 @@ sub _setup_database {
     my $enable_schema_filter = @{ $args->{schema} } > 0 ? 1 : 0;
 
     my %tables =
-      $enable_schema_filter
-      ? map { $_           => undef } @{ $args->{schema} }
-      : map { $_->{schema} => undef }
-      grep  { exists $_->{schema} } @$database;
+        $enable_schema_filter
+            ? map { $_           => undef } @{ $args->{schema} }
+                : map { $_->{schema} => undef }
+                    grep  { exists $_->{schema} } @$database;
 
     for my $def (@$database) {
         next
-          unless ( exists $def->{schema}
-            && exists $tables{ $def->{schema} } );
+            unless ( exists $def->{schema}
+                         && exists $tables{ $def->{schema} } );
         $dbh->do( $def->{data} ) or croak( $dbh->errstr );
         push( @databases, $def );
     }
 
     my %indexes =
-      map { $_->{index} => undef }
-      grep {
-             exists $_->{index}
-          && exists $_->{refer}
-          && exists $tables{ $_->{refer} }
-      } @$database;
+        map { $_->{index} => undef }
+            grep {
+                exists $_->{index}
+                    && exists $_->{refer}
+                        && exists $tables{ $_->{refer} }
+                    } @$database;
 
     for my $def (@$database) {
         next
-          unless ( exists $def->{index}
-            && exists $tables{ $def->{refer} } );
+            unless ( exists $def->{index}
+                         && exists $tables{ $def->{refer} } );
         $dbh->do( $def->{data} ) or croak( $dbh->errstr );
         push( @databases, $def );
     }
@@ -208,15 +206,15 @@ sub _setup_database {
     ### TODO: considering index for SQLite
     for my $target (qw/procedure function event/) {
         my %targets =
-          @{ $args->{$target} } > 0
-          ? map { $_            => undef } @{ $args->{$target} }
-          : map { $_->{$target} => undef }
-          grep { exists $_->{$target} } @$database;
+            @{ $args->{$target} } > 0
+                ? map { $_            => undef } @{ $args->{$target} }
+                    : map { $_->{$target} => undef }
+                        grep { exists $_->{$target} } @$database;
 
         for my $def (@$database) {
             next
-              unless ( exists $def->{$target}
-                && exists $targets{ $def->{$target} } );
+                unless ( exists $def->{$target}
+                             && exists $targets{ $def->{$target} } );
             $dbh->do( $def->{data} ) or croak( $dbh->errstr );
             push( @databases, $def );
         }
@@ -248,8 +246,8 @@ sub construct_trigger {
 
     my $trigger = _validate_database( _load_database( $args{database} ) );
     return _setup_trigger( $args{dbh},
-        [ grep { exists $_->{trigger} && exists $_->{refer} } @$trigger ],
-        \%args );
+                           [ grep { exists $_->{trigger} && exists $_->{refer} } @$trigger ],
+                           \%args );
 }
 
 sub _setup_trigger {
@@ -257,9 +255,9 @@ sub _setup_trigger {
     my @triggers;
 
     my %triggers =
-      @{ $args->{schema} } > 0
-      ? ( map { $_ => undef } @{ $args->{schema} } )
-      : ( map { $_->{refer} => undef } @$trigger );
+        @{ $args->{schema} } > 0
+            ? ( map { $_ => undef } @{ $args->{schema} } )
+                : ( map { $_->{refer} => undef } @$trigger );
 
     for my $def (@$trigger) {
         next if ( !exists $triggers{ $def->{refer} } );
@@ -305,17 +303,17 @@ sub _validate_fixture {
     my $stuff = shift;
 
     for my $data ( @$stuff ) {
-	my @data = %$data;
-	_validate_with(
-	    params => \@data,
-	    spec => +{
-		name   => +{ type => _SCALAR, required => 1, },
-		schema => +{ type => _SCALAR,    required => 1, },
-		data   => +{ type => _SCALAR | _ARRAYREF | _HASHREF,    required => 1, },
-	    },
-	);
+        my @data = %$data;
+        _validate_with(
+            params => \@data,
+            spec => +{
+                name   => +{ type => _SCALAR, required => 1, },
+                schema => +{ type => _SCALAR,    required => 1, },
+                data   => +{ type => _SCALAR | _ARRAYREF | _HASHREF,    required => 1, },
+            },
+        );
     }
-    
+
     return $stuff;
 }
 
@@ -326,17 +324,14 @@ sub _load_fixture {
         if ( ref $stuff eq 'ARRAY' ) {
             if ( ref $stuff->[0] ) {
                 return $stuff;
-            }
-            else {
+            } else {
                 require YAML::Syck;
                 return [ map { @{ YAML::Syck::LoadFile($_) } } @$stuff ];
             }
-        }
-        else {
+        } else {
             croak "invalid fixture stuff. should be ARRAY: $stuff";
         }
-    }
-    else {
+    } else {
         croak "invalid fixture stuff. should be ARRAY: $stuff";
     }
 }
@@ -349,7 +344,7 @@ sub _delete_all {
 
     for my $schema (@schema) {
         $dbh->do( sprintf( 'DELETE FROM %s', $schema ) )
-          or croak( $dbh->errstr );
+            or croak( $dbh->errstr );
     }
 }
 
@@ -364,7 +359,7 @@ sub _insert {
 
     for my $schema (@schema) {
         my @records =
-          map { $_->{data} } grep { $_->{schema} eq $schema } @$fixture;
+            map { $_->{data} } grep { $_->{schema} eq $schema } @$fixture;
         my @records_tmp;
 
         if ( $opts->{bulk_insert} ) {
@@ -373,8 +368,7 @@ sub _insert {
                 $dbh->do( $stmt, undef, @bind ) or croak( $dbh->errstr );
                 $dbh->commit or croak( $dbh->errstr );
             }
-        }
-        else {
+        } else {
             while ( ( @records_tmp = splice( @records, 0, 1000 ) ) > 0 ) {
                 for (@records_tmp) {
                     ( $stmt, @bind ) = $sql->insert( $schema, $_ );

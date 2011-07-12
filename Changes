@@ -1,5 +1,8 @@
 Revision history for Perl extension Test::Fixture::DBI
 
+0.07        Tue Jul 12 13:22:31 2011
+              - Supports mysql events (thanks of nekokak)
+
 0.06        Wed Oct 20 15:04:07 2010
               - None library code changes (changes only in t/lib)
               - Not dependency on SQL::SplitStatements
