@@ -128,9 +128,10 @@ sub _events {
         return ();
     }
 
+    my ($dbname) = $dbh->selectrow_array('SELECT DATABASE()');
     my $rows = $dbh->selectall_arrayref( 'SHOW EVENTS', +{ Slice => +{} } );
     my @data;
-    for my $row ( sort { $a->{Name} cmp $b->{Name} } @$rows ) {
+    for my $row ( sort { $a->{Name} cmp $b->{Name} } grep { $_->{Db} eq $dbname } @$rows ) {
         my $def = $dbh->selectrow_hashref( sprintf( 'SHOW CREATE EVENT %s', $row->{Name} ) );
         push(
             @data,
