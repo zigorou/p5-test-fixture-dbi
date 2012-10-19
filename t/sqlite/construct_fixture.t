@@ -334,7 +334,7 @@ subtest 'multiple fixture from yaml' => sub {
     done_testing;
 };
 
-subtest 'fail bulk_insret' => sub {
+subtest 'fail bulk_insert' => sub {
     my $dbh = $connector->dbh;
 
     my $database = construct_database(
