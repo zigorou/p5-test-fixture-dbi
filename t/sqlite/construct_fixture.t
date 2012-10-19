@@ -10,6 +10,17 @@ use Test::Fixture::DBI::Connector::SQLite;
 my $connector = 'Test::Fixture::DBI::Connector::SQLite';
 
 my $fixture = +{
+    transit_001 => [
+        +{
+            name   => 'oomiya',
+            schema => 'transit',
+            data   => +{
+                id   => 1,
+                from => 'oomiya',
+                to   => 'shinjuku',
+            },
+        },
+    ],
     people_001 => [
         +{
             name   => 'zigorou',
@@ -108,7 +119,7 @@ subtest 'default' => sub {
         sub {
             construct_fixture(
                 dbh     => $dbh,
-                opts    => +{ bulk_insert => 0 }, 
+                opts    => +{ bulk_insert => 0 },
                 fixture => $fixture->{people_001},
             );
         },
@@ -325,7 +336,7 @@ subtest 'multiple fixture from yaml' => sub {
 
 subtest 'fail bulk_insret' => sub {
     my $dbh = $connector->dbh;
-    
+
     my $database = construct_database(
         dbh      => $dbh,
         database => 't/sqlite/schema.yaml',
@@ -345,6 +356,41 @@ subtest 'fail bulk_insret' => sub {
 
     $dbh->disconnect;
     
+    done_testing;
+};
+
+subtest 'reserved word' => sub {
+    my $dbh = $connector->dbh;
+
+    my $database = construct_database(
+        dbh      => $dbh,
+        database => 't/sqlite/schema.yaml',
+        schema   => [qw/transit/],
+    );
+
+    lives_ok(
+        sub {
+            construct_fixture(
+                dbh => $dbh,
+                fixture => $fixture->{transit_001},
+            );
+        },
+        'consturct_fixture() will be success'
+    );
+
+    is_deeply(
+        $dbh->selectall_arrayref(
+            'SELECT "id", "from", "to" FROM "transit" ORDER BY "id" ASC',
+            +{ Slice => +{} }
+        ),
+        [
+            +{ id => 1, from => 'oomiya', to => 'shinjuku' },
+        ],
+        'fixture data test'
+    );
+
+    $dbh->disconnect;
+
     done_testing;
 };
 

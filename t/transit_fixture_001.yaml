@@ -1,0 +1,7 @@
+---
+- data:
+    id: 1
+    from: oomiya
+    to: shinjuku
+  name: oomiya
+  schema: transit

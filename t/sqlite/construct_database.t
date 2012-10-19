@@ -41,7 +41,7 @@ subtest 'default' => sub {
     );
 
     test_database( $dbh, 'table',
-        [qw/friend friend_counter people people_counter/] );
+        [qw/friend friend_counter people people_counter transit/] );
 
     test_database(
         $dbh, 'index',

@@ -291,8 +291,6 @@ sub construct_fixture {
 
     $args{fixture} = [ $args{fixture} ] unless ( ref $args{fixture} );
 
-    # $args{opts} ||= +{ bulk_insert => 1, };
-
     my $fixture = _validate_fixture( _load_fixture( $args{fixture} ) );
 
     _delete_all( $args{dbh}, $fixture );
@@ -354,7 +352,19 @@ sub _insert {
     my %seen;
     my @schema = grep { !$seen{$_}++ } map { $_->{schema} } @$fixture;
 
-    my $sql = SQL::Abstract->new;
+    my $driver = $dbh->{Driver}{Name};
+    my $quote_char = do {
+        if ($driver eq 'mysql') {
+            q{`}
+        } else {
+            q{"}
+        }
+    };
+
+    my $sql = SQL::Abstract->new(
+        quote_char => $quote_char,
+    );
+
     my ( $stmt, @bind );
 
     for my $schema (@schema) {
