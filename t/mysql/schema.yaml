@@ -12,6 +12,9 @@
   data: "CREATE TABLE `friend_counter` (\n  `counter` int(11) NOT NULL DEFAULT '0'\n) ENGINE=MyISAM DEFAULT CHARSET=utf8"
   schema: friend_counter
 - 
+  data: "CREATE TABLE `transit` (\n   `id` int(11) NOT NULL, `from` varchar(50) NOT NULL, `to` varchar(50) NOT NULL \n) ENGINE=InnoDB DEFAULT CHARSET=utf8"
+  schema: transit
+- 
   data: "CREATE PROCEDURE `proc_get_people_counter`()\nBEGIN\n    SELECT counter FROM people_counter;\n  END"
   procedure: proc_get_people_counter
 - 

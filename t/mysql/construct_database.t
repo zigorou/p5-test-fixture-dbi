@@ -95,7 +95,7 @@ subtest 'default' => sub {
         'construct_database() will be success',
     );
 
-    test_tables( $dbh, [qw/people people_counter friend friend_counter/] );
+    test_tables( $dbh, [qw/people people_counter friend friend_counter transit/] );
     test_procedures( $dbh,
         [qw/proc_get_friend_counter proc_get_people_counter/] );
     test_functions( $dbh, [qw/func_hello_world func_hello_world2/] );

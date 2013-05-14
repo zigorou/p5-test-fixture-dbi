@@ -340,6 +340,39 @@ subtest 'multiple fixture from yaml' => sub {
     done_testing;
 };
 
+subtest 'reserved word' => sub {
+    setup_test($dbh);
+
+    my $database = construct_database(
+        dbh      => $dbh,
+        database => 't/mysql/schema.yaml',
+        schema   => [qw/transit/],
+    );
+
+    lives_ok(
+        sub {
+            construct_fixture(
+                dbh => $dbh,
+                fixture => 't/transit_fixture_001.yaml',
+            );
+        },
+        'consturct_fixture() will be success'
+    );
+
+    is_deeply(
+        $dbh->selectall_arrayref(
+            'SELECT `id`, `from`, `to` FROM `transit` ORDER BY `id` ASC',
+            +{ Slice => +{} }
+        ),
+        [
+            +{ id => 1, from => 'oomiya', to => 'shinjuku' },
+        ],
+        'fixture data test'
+    );
+
+    done_testing;
+};
+
 $dbh->disconnect;
 
 done_testing;

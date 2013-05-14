@@ -8,8 +8,9 @@ our $VERSION = '0.07';
 use Carp;
 use Exporter qw(import);
 use Scalar::Util qw(blessed);
-use SQL::Abstract;
-use SQL::Abstract::Plugin::InsertMulti;
+use SQL::Maker;
+
+SQL::Maker->load_plugin('InsertMulti');
 
 our @EXPORT      = qw(construct_database construct_fixture);
 our @EXPORT_OK   = qw( construct_trigger );
@@ -291,8 +292,6 @@ sub construct_fixture {
 
     $args{fixture} = [ $args{fixture} ] unless ( ref $args{fixture} );
 
-    # $args{opts} ||= +{ bulk_insert => 1, };
-
     my $fixture = _validate_fixture( _load_fixture( $args{fixture} ) );
 
     _delete_all( $args{dbh}, $fixture );
@@ -354,7 +353,8 @@ sub _insert {
     my %seen;
     my @schema = grep { !$seen{$_}++ } map { $_->{schema} } @$fixture;
 
-    my $sql = SQL::Abstract->new;
+    my $builder = SQL::Maker->new(driver => $dbh->{Driver}{Name});
+
     my ( $stmt, @bind );
 
     for my $schema (@schema) {
@@ -364,14 +364,14 @@ sub _insert {
 
         if ( $opts->{bulk_insert} ) {
             while ( ( @records_tmp = splice( @records, 0, 1000 ) ) > 0 ) {
-                ( $stmt, @bind ) = $sql->insert_multi( $schema, \@records_tmp );
+                ( $stmt, @bind ) = $builder->insert_multi( $schema, \@records_tmp );
                 $dbh->do( $stmt, undef, @bind ) or croak( $dbh->errstr );
                 $dbh->commit or croak( $dbh->errstr );
             }
         } else {
             while ( ( @records_tmp = splice( @records, 0, 1000 ) ) > 0 ) {
                 for (@records_tmp) {
-                    ( $stmt, @bind ) = $sql->insert( $schema, $_ );
+                    ( $stmt, @bind ) = $builder->insert( $schema, $_ );
                     $dbh->do( $stmt, undef, @bind ) or croak( $dbh->errstr );
                 }
                 $dbh->commit or croak( $dbh->errstr );

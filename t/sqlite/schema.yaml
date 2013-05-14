@@ -12,6 +12,9 @@
   data: "CREATE TABLE people_counter (\n  counter INTEGER NOT NULL DEFAULT 0\n)"
   schema: people_counter
 - 
+  data: "CREATE TABLE transit (\n   \"id\" INTEGER NOT NULL, \"from\" TEXT NOT NULL, \"to\" TEXT NOT NULL \n)"
+  schema: transit
+- 
   data: "CREATE TRIGGER on_after_delete_people AFTER DELETE ON people\nFOR EACH ROW BEGIN\n  UPDATE people_counter SET counter = counter - 1;\nEND"
   refer: people
   trigger: on_after_delete_people
