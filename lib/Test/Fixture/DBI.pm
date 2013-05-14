@@ -8,8 +8,9 @@ our $VERSION = '0.07';
 use Carp;
 use Exporter qw(import);
 use Scalar::Util qw(blessed);
-use SQL::Abstract;
-use SQL::Abstract::Plugin::InsertMulti;
+use SQL::Maker;
+
+SQL::Maker->load_plugin('InsertMulti');
 
 our @EXPORT      = qw(construct_database construct_fixture);
 our @EXPORT_OK   = qw( construct_trigger );
@@ -352,18 +353,7 @@ sub _insert {
     my %seen;
     my @schema = grep { !$seen{$_}++ } map { $_->{schema} } @$fixture;
 
-    my $driver = $dbh->{Driver}{Name};
-    my $quote_char = do {
-        if ($driver eq 'mysql') {
-            q{`}
-        } else {
-            q{"}
-        }
-    };
-
-    my $sql = SQL::Abstract->new(
-        quote_char => $quote_char,
-    );
+    my $builder = SQL::Maker->new(driver => $dbh->{Driver}{Name});
 
     my ( $stmt, @bind );
 
@@ -374,14 +364,14 @@ sub _insert {
 
         if ( $opts->{bulk_insert} ) {
             while ( ( @records_tmp = splice( @records, 0, 1000 ) ) > 0 ) {
-                ( $stmt, @bind ) = $sql->insert_multi( $schema, \@records_tmp );
+                ( $stmt, @bind ) = $builder->insert_multi( $schema, \@records_tmp );
                 $dbh->do( $stmt, undef, @bind ) or croak( $dbh->errstr );
                 $dbh->commit or croak( $dbh->errstr );
             }
         } else {
             while ( ( @records_tmp = splice( @records, 0, 1000 ) ) > 0 ) {
                 for (@records_tmp) {
-                    ( $stmt, @bind ) = $sql->insert( $schema, $_ );
+                    ( $stmt, @bind ) = $builder->insert( $schema, $_ );
                     $dbh->do( $stmt, undef, @bind ) or croak( $dbh->errstr );
                 }
                 $dbh->commit or croak( $dbh->errstr );

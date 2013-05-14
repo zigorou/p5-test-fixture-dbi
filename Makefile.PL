@@ -10,8 +10,7 @@ requires 'File::Temp';
 requires 'Getopt::Long';
 requires 'Pod::Usage';
 requires 'Scalar::Util';
-requires 'SQL::Abstract';
-requires 'SQL::Abstract::Plugin::InsertMulti';
+requires 'SQL::Maker';
 requires 'UNIVERSAL::require';
 requires 'YAML::Syck';
 

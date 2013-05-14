@@ -1,5 +1,6 @@
 use strict;
 use warnings;
+use version;
 use lib 't/lib';
 
 use Test::More;
@@ -179,7 +180,7 @@ subtest 'from yaml' => sub {
         sub {
             construct_fixture(
                 dbh     => $dbh,
-                opts    => +{ bulk_insert => 0 }, 
+                opts    => +{ bulk_insert => 0 },
                 fixture => 't/people_fixture_001.yaml',
             );
         },
@@ -222,7 +223,7 @@ subtest 'from yaml' => sub {
     );
 
     $dbh->disconnect;
-    
+
     done_testing;
 };
 
@@ -239,7 +240,7 @@ subtest 'multiple fixture' => sub {
         sub {
             construct_fixture(
                 dbh     => $dbh,
-                opts    => +{ bulk_insert => 0 }, 
+                opts    => +{ bulk_insert => 0 },
                 fixture => [
                     @{$fixture->{people_001}},
                     @{$fixture->{friend}},
@@ -276,7 +277,7 @@ subtest 'multiple fixture' => sub {
     );
 
     $dbh->disconnect;
-    
+
     done_testing;
 };
 
@@ -293,7 +294,7 @@ subtest 'multiple fixture from yaml' => sub {
         sub {
             construct_fixture(
                 dbh     => $dbh,
-                opts    => +{ bulk_insert => 0 }, 
+                opts    => +{ bulk_insert => 0 },
                 fixture => [
                     't/people_fixture_001.yaml',
                     't/friend_fixture.yaml',
@@ -337,6 +338,11 @@ subtest 'multiple fixture from yaml' => sub {
 subtest 'fail bulk_insert' => sub {
     my $dbh = $connector->dbh;
 
+    my $version = version->new($dbh->get_info( 18 ));
+    if ($version >= version->new(3.7.11)) {
+        plan skip_all => 'bulk_insert implemented >= 3.7.11';
+    }
+
     my $database = construct_database(
         dbh      => $dbh,
         database => 't/sqlite/schema.yaml',
@@ -355,7 +361,7 @@ subtest 'fail bulk_insert' => sub {
     );
 
     $dbh->disconnect;
-    
+
     done_testing;
 };
 
