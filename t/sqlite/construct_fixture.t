@@ -323,31 +323,6 @@ subtest 'multiple fixture from yaml' => sub {
     done_testing;
 };
 
-subtest 'fail bulk_insret' => sub {
-    my $dbh = $connector->dbh;
-    
-    my $database = construct_database(
-        dbh      => $dbh,
-        database => 't/sqlite/schema.yaml',
-        schema   => [qw/people/],
-    );
-
-    dies_ok(
-        sub {
-            construct_fixture(
-                dbh => $dbh,
-                opts => +{ bulk_insert => 1 },
-                fixture => $fixture->{people_001},
-            );
-        },
-        'bulk_insert not support',
-    );
-
-    $dbh->disconnect;
-    
-    done_testing;
-};
-
 done_testing;
 
 # Local Variables:
