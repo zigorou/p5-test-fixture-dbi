@@ -1,5 +1,9 @@
 Revision history for Perl extension Test::Fixture::DBI
 
+0.08        Sat Jan 31 19:58:22 JST 2015
+              - Fixed RT 101842
+              - Changes to M::B from E::MM
+
 0.07        Tue Jul 12 13:22:31 2011
               - Supports mysql events (thanks of nekokak)
 
