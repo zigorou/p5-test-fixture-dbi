@@ -9,7 +9,7 @@ use DBI;
 use File::Temp qw(tempfile);
 use Test::Requires 'DBD::SQLite';
 
-our $VERSION = '0.01';
+our $VERSION = '0.08';
 
 sub dbh {
     my ( $class, $args ) = @_;

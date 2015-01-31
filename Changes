@@ -1,33 +1,35 @@
 Revision history for Perl extension Test::Fixture::DBI
 
-0.08        Sat Jan 31 19:58:22 JST 2015
-              - Fixed RT 101842
-              - Changes to M::B from E::MM
+{{$NEXT}}
+
+0.08 2015-01-31T11:06:28Z
+    - Fixed RT 101842
+    - Changes to M::B from E::MM
 
 0.07        Tue Jul 12 13:22:31 2011
-              - Supports mysql events (thanks of nekokak)
+    - Supports mysql events (thanks of nekokak)
 
 0.06        Wed Oct 20 15:04:07 2010
-              - None library code changes (changes only in t/lib)
-              - Not dependency on SQL::SplitStatements
-                - S::SS depends on Moose;(
+    - None library code changes (changes only in t/lib)
+    - Not dependency on SQL::SplitStatements
+    - S::SS depends on Moose;(
 
 0.05        Tue Oct 19 22:46:26 2010
-              - Do not execute 'SHOW CREATE TRIGGER' on less than MySQL 5.1 
-                - MySQL 5.0 is not support 'SHOW CREATE TRIGGER'
-              - Not dependency on Params::Validate and Kwalify.
+    - Do not execute 'SHOW CREATE TRIGGER' on less than MySQL 5.1 
+    - MySQL 5.0 is not support 'SHOW CREATE TRIGGER'
+    - Not dependency on Params::Validate and Kwalify.
 
 0.04        Tue Oct 12 18:51:17 2010
-              - Do not fetch trigger definitions on less than mysql 5.1
+    - Do not fetch trigger definitions on less than mysql 5.1
 
 0.03        Sat Aug 28 19:44:18 2010
-              - version++
+    - version++
 
 0.02        Sat Aug 28 19:36:46 2010
-              - fixed typo and undefined warnings
+    - fixed typo and undefined warnings
 
 0.02_01     Mon Aug 23 01:35:18 2010
-              - remove test_requires of two module (DBD::SQLite, Test::mysqld) 
+    - remove test_requires of two module (DBD::SQLite, Test::mysqld) 
 
 0.01        Wed Mar 24 16:54:44 2010
-              - original version
+    - original version
