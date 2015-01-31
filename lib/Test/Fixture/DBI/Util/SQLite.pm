@@ -3,7 +3,7 @@ package Test::Fixture::DBI::Util::SQLite;
 use strict;
 use warnings;
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 
 sub make_database {
     my ( $class, $dbh ) = @_;

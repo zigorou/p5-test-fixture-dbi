@@ -9,7 +9,7 @@ use DBI;
 use YAML::Syck;
 use UNIVERSAL::require;
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 our @EXPORT  = qw(make_database_yaml make_fixture_yaml);
 
 sub make_database_yaml {

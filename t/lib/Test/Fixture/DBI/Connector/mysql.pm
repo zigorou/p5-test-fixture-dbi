@@ -9,7 +9,7 @@ use DBI;
 use Test::Requires 'Test::mysqld';
 use Test::mysqld;
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 
 sub dbh {
     my ( $class, $args ) = @_;

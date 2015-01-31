@@ -79,7 +79,7 @@
          "web" : "https://github.com/zigorou/p5-test-fixture-dbi"
       }
    },
-   "version" : "0.08",
+   "version" : "0.09",
    "x_contributors" : [
       "Atsushi Kobayashi <nekokak@gmail.com>",
       "xaicron <xaicron@gmail.com>"

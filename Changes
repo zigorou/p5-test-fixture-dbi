@@ -2,7 +2,7 @@ Revision history for Perl extension Test::Fixture::DBI
 
 {{$NEXT}}
 
-0.08 2015-01-31T11:06:28Z
+0.09 2015-01-31T11:07:56Z
     - Fixed RT 101842
     - Changes to M::B from E::MM
 
