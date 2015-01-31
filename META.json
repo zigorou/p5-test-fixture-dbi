@@ -1,0 +1,87 @@
+{
+   "abstract" : "load fixture data to database.",
+   "author" : [
+      "Toru Yamaguchi <zigorou@cpan.org>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Minilla/v1.0.0, CPAN::Meta::Converter version 2.141520",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "Test-Fixture-DBI",
+   "no_index" : {
+      "directory" : [
+         "t",
+         "xt",
+         "inc",
+         "share",
+         "eg",
+         "examples",
+         "author",
+         "builder"
+      ]
+   },
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "6.36",
+            "Test::Exception" : "0",
+            "Test::LoadAllModules" : "0",
+            "Test::More" : "0",
+            "Test::Requires" : "0"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "CPAN::Meta" : "0",
+            "CPAN::Meta::Prereqs" : "0",
+            "Module::Build" : "0.38"
+         }
+      },
+      "develop" : {
+         "requires" : {
+            "Test::CPAN::Meta" : "0",
+            "Test::MinimumVersion::Fast" : "0.04",
+            "Test::PAUSE::Permissions" : "0.04",
+            "Test::Pod" : "1.41",
+            "Test::Spellunker" : "v0.2.7"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "Carp" : "0",
+            "DBI" : "0",
+            "Exporter" : "0",
+            "File::Temp" : "0",
+            "Getopt::Long" : "0",
+            "Pod::Usage" : "0",
+            "SQL::Abstract" : "0",
+            "SQL::Abstract::Plugin::InsertMulti" : "0",
+            "Scalar::Util" : "0",
+            "UNIVERSAL::require" : "0",
+            "YAML::Syck" : "0",
+            "parent" : "0"
+         }
+      }
+   },
+   "release_status" : "unstable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/zigorou/p5-test-fixture-dbi/issues"
+      },
+      "homepage" : "https://github.com/zigorou/p5-test-fixture-dbi",
+      "repository" : {
+         "url" : "https://github.com/zigorou/p5-test-fixture-dbi.git",
+         "web" : "https://github.com/zigorou/p5-test-fixture-dbi"
+      }
+   },
+   "version" : "0.09",
+   "x_contributors" : [
+      "Atsushi Kobayashi <nekokak@gmail.com>",
+      "xaicron <xaicron@gmail.com>"
+   ]
+}

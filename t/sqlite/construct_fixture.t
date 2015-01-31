@@ -323,7 +323,7 @@ subtest 'multiple fixture from yaml' => sub {
     done_testing;
 };
 
-subtest 'fail bulk_insret' => sub {
+subtest 'bulk_insret' => sub {
     my $dbh = $connector->dbh;
     
     my $database = construct_database(
@@ -332,7 +332,7 @@ subtest 'fail bulk_insret' => sub {
         schema   => [qw/people/],
     );
 
-    dies_ok(
+    lives_ok(
         sub {
             construct_fixture(
                 dbh => $dbh,
@@ -340,7 +340,20 @@ subtest 'fail bulk_insret' => sub {
                 fixture => $fixture->{people_001},
             );
         },
-        'bulk_insert not support',
+        'bulk_insert will be success',
+    );
+
+    is_deeply(
+        $dbh->selectall_arrayref(
+            'SELECT id, nickname, status FROM people ORDER BY id ASC',
+            +{ Slice => +{} }
+        ),
+        [
+            +{ id => 1, nickname => 'zigorou', status => 0, },
+            +{ id => 2, nickname => 'hidek',   status => 1, },
+            +{ id => 3, nickname => 'xaicron', status => 2, },
+        ],
+        'fixture people test with bulk_insert'
     );
 
     $dbh->disconnect;

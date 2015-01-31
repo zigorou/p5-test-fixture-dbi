@@ -5,7 +5,7 @@ use warnings;
 
 use DBI;
 
-our $VERSION = '0.02';
+our $VERSION = '0.09';
 
 sub make_database {
     my ( $class, $dbh ) = @_;

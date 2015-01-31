@@ -11,7 +11,7 @@ use Pod::Usage;
 use Test::Fixture::DBI::Util;
 use YAML::Syck;
 
-our $VERSION = 0.01;
+our $VERSION = 0.09;
 
 my ( $is_man, $is_help, $dsn, $user, $output, $password, );
 

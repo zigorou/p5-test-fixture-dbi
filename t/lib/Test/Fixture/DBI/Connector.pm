@@ -7,7 +7,7 @@ use Carp;
 use Exporter qw(import);
 use Test::More;
 
-our $VERSION = '0.01';
+our $VERSION = '0.09';
 our @EXPORT_OK = qw(test_schema test_procedure test_function test_trigger test_index);
 our %EXPORT_TAGS = ( all => [ @EXPORT_OK ] );
 
