@@ -38,7 +38,7 @@ sub make_fixture_yaml {
             @data,
             +{
                 name => ref $name_column
-                ? join( '_', map { $row->{$_} } @$name_column )
+                ? join( '_', map { defined $row->{$_} ? $row->{$_} : '' } @$name_column )
                 : $row->{$name_column},
                 schema => $schema,
                 data   => $row,
